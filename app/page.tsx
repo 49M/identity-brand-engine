@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-purple-950">
@@ -49,9 +51,9 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-              <button className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all transform hover:scale-105">
+              <Link href="/create-profile" className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all transform hover:scale-105">
                 Start Building Your Identity
-              </button>
+              </Link>
               <button className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white font-semibold hover:bg-white/20 transition-all">
                 See How It Works
               </button>
@@ -229,9 +231,9 @@ export default function Home() {
           <p className="text-xl text-gray-300 mb-8">
             Stop copying. Start creating content that fits who you are becoming.
           </p>
-          <button className="px-10 py-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white text-lg font-semibold hover:shadow-2xl hover:shadow-purple-500/50 transition-all transform hover:scale-105">
+          <Link href="/create-profile" className="inline-block px-10 py-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white text-lg font-semibold hover:shadow-2xl hover:shadow-purple-500/50 transition-all transform hover:scale-105">
             Start Your Identity Journey
-          </button>
+          </Link>
         </div>
       </div>
 

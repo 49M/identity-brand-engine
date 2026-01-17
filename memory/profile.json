@@ -1,9 +1,9 @@
 {
   "creator": {
-    "name": "joe",
+    "name": "Developian",
     "experienceLevel": "beginner",
     "background": [
-      "business"
+      "Motivation & Productivity"
     ],
     "goals": [
       "grow personal brand",
@@ -14,7 +14,7 @@
     "targetViewer": {
       "ageRange": "18-35",
       "interests": [
-        "business"
+        "Motivation & Productivity"
       ],
       "painPoints": []
     },
@@ -24,8 +24,8 @@
     "postingFrequency": "daily",
     "videoLengthSeconds": 30,
     "tone": [
-      "calm",
-      "measured"
+      "aggressive",
+      "intense"
     ]
   }
 }

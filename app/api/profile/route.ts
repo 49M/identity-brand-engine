@@ -1,13 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeMemory, completeOnboarding, initializeMemory } from '@/lib/memory'
+import { writeMemory, initializeMemory, readMemory } from '@/lib/memory'
+import { getOrCreateAssistant, uploadCreatorProfile, createCreatorThread } from '@/lib/ai/backboard-initialize'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { creatorName, niche, dimensions } = body
 
-    // Ensure memory system is initialized
+    // Ensure JSON memory system is initialized
     await initializeMemory()
+
+    // Generate a unique creator ID (in production, use proper user ID)
+    const creatorId = creatorName.toLowerCase().replace(/\s+/g, '_')
+
+    console.log('🧠 Initializing Backboard for adaptive memory...')
 
     // Map the UI dimensions to brand persona data
     const tone = dimensions.Tone
@@ -67,7 +73,7 @@ export async function POST(request: NextRequest) {
     })
 
     // Write to brand.json - initialize with inferred persona
-    await writeMemory('brand', {
+    const brandData = {
       persona: {
         archetype: authority > 60 ? 'Educator-Expert' : 'Peer-Guide',
         coreThemes: [niche, ...contentApproach],
@@ -82,20 +88,69 @@ export async function POST(request: NextRequest) {
         whatYouAvoid: risk < 40 ? ['controversial topics'] : []
       },
       confidenceScore: 0.5 // Initial confidence, will evolve with content
-    })
+    }
+    await writeMemory('brand', brandData)
 
-    // Mark onboarding as complete
-    await completeOnboarding()
+    // Read the written memories for Backboard upload
+    const profileMemory = await readMemory('profile')
+    const brandMemory = await readMemory('brand')
 
-    return NextResponse.json({
-      success: true,
-      message: 'Profile created successfully',
-      data: {
-        creatorName,
-        niche,
-        dimensions
-      }
-    })
+    // Initialize Backboard: Create assistant, upload profile, create thread
+    try {
+      console.log('📋 Step 1: Getting or creating Backboard assistant...')
+      const assistantId = await getOrCreateAssistant()
+
+      console.log('📄 Step 2: Uploading creator profile as document...')
+      const documentId = await uploadCreatorProfile(assistantId, profileMemory, brandMemory, creatorId)
+
+      console.log('💬 Step 3: Creating thread for creator...')
+      const threadId = await createCreatorThread(assistantId)
+
+      console.log('✅ Backboard initialization complete!')
+
+      // Store Backboard IDs in meta
+      await writeMemory('meta', {
+        onboardingComplete: true,
+        backboardSessionId: threadId,
+        backboardAssistantId: assistantId,
+        backboardDocumentId: documentId,
+        lastUpdated: new Date().toISOString()
+      })
+
+      return NextResponse.json({
+        success: true,
+        message: 'Profile created successfully with Backboard integration',
+        data: {
+          creatorName,
+          niche,
+          dimensions,
+          backboard: {
+            assistantId,
+            threadId,
+            documentId
+          }
+        }
+      })
+    } catch (backboardError) {
+      console.error('⚠️  Backboard integration failed:', backboardError)
+
+      // Fallback: Still complete profile creation without Backboard
+      await writeMemory('meta', {
+        onboardingComplete: true,
+        lastUpdated: new Date().toISOString()
+      })
+
+      return NextResponse.json({
+        success: true,
+        message: 'Profile created successfully (Backboard unavailable)',
+        data: {
+          creatorName,
+          niche,
+          dimensions,
+          warning: 'Backboard integration failed - profile created in local mode'
+        }
+      })
+    }
   } catch (error) {
     console.error('Error creating profile:', error)
     return NextResponse.json(

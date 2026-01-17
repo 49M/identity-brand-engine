@@ -2,17 +2,17 @@
   "persona": {
     "archetype": "Educator-Expert",
     "coreThemes": [
-      "business",
-      "tactical",
-      "how-to",
-      "actionable"
+      "Motivation & Productivity",
+      "philosophical",
+      "conceptual",
+      "big-picture"
     ],
     "voice": {
       "style": [
-        "calm",
-        "measured"
+        "aggressive",
+        "intense"
       ],
-      "pacing": "slow",
+      "pacing": "fast",
       "emotionalRange": [
         "motivational",
         "inspiring"
@@ -21,12 +21,10 @@
   },
   "positioning": {
     "whatYouAreKnownFor": [
-      "business",
-      "tactical"
+      "Motivation & Productivity",
+      "philosophical"
     ],
-    "whatYouAvoid": [
-      "controversial topics"
-    ]
+    "whatYouAvoid": []
   },
   "confidenceScore": 0.5
 }

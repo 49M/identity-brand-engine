@@ -1,6 +1,7 @@
 import axios from "axios"
 
-const BACKBOARD_BASE_URL = "https://api.backboard.io"
+// Backboard.io API base URL (correct format based on documentation)
+const BACKBOARD_BASE_URL = "https://app.backboard.io/api"
 
 export const backboard = axios.create({
   baseURL: BACKBOARD_BASE_URL,
@@ -9,3 +10,13 @@ export const backboard = axios.create({
     "Content-Type": "application/json",
   },
 })
+
+// Development mode: Check if Backboard is available
+export const isBackboardAvailable = async (): Promise<boolean> => {
+  try {
+    await backboard.get('/health')
+    return true
+  } catch {
+    return false
+  }
+}

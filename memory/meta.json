@@ -1,10 +1,13 @@
 {
   "version": "0.1.0",
   "createdAt": "2026-01-17T00:00:00Z",
-  "lastUpdated": "2026-01-17T05:21:51.600Z",
+  "lastUpdated": "2026-01-17T15:57:35.215Z",
   "onboardingComplete": true,
   "activePersonaId": "primary",
   "flags": {
     "needsReanalysis": false
-  }
+  },
+  "backboardSessionId": "d06c555e-8a31-40ef-98f1-6815139ed322",
+  "backboardAssistantId": "544b4f5f-2080-4f62-896f-8d3a034b3847",
+  "backboardDocumentId": "f49cba20-1b6d-4ecd-9a8a-8fc851d50f1e"
 }

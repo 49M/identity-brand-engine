@@ -104,7 +104,7 @@ export default function Home() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Chasing Trends Blindly</h3>
-              <p className="text-gray-400">Following what's viral without considering if it aligns with who you are.</p>
+              <p className="text-gray-400">Following what&apos;s viral without considering if it aligns with who you are.</p>
             </div>
 
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-orange-500/50 transition-all">

@@ -31,6 +31,16 @@ export default function Dashboard() {
   const [profileData, setProfileData] = useState<ProfileData | null>(null)
   const [loading, setLoading] = useState(true)
   const [activePanel, setActivePanel] = useState<ActivePanel>(null)
+  const [targetAudience, setTargetAudience] = useState<string>('')
+
+  useEffect(() => {
+    async function loadAudience() {
+      const response = await fetch('/api/target-audience')
+      const data = await response.json()
+      setTargetAudience(data.targetAudience)
+    }
+    loadAudience()
+  }, [])
 
   useEffect(() => {
     async function loadProfile() {
@@ -96,7 +106,7 @@ export default function Dashboard() {
         </div>
 
         {/* Profile Summary */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
             <h2 className="text-xl font-bold text-white mb-4">Your Identity</h2>
             <div className="space-y-3">
@@ -140,6 +150,50 @@ export default function Dashboard() {
             <p className="text-xs text-gray-400 mt-3">
               Your score will evolve as you upload and analyze content
             </p>
+          </div>
+
+          <div className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 backdrop-blur-sm border border-cyan-500/30 rounded-2xl p-6 flex flex-col h-full">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-white">Your Target Audience</h2>
+              <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+            </div>
+            {targetAudience ? (
+              <>
+                <div className="flex-1 overflow-y-auto pr-2 space-y-3 mb-3 max-h-[280px] custom-scrollbar">
+                  <div
+                    className="text-sm text-cyan-100/90 leading-relaxed prose prose-sm prose-invert max-w-none"
+                    dangerouslySetInnerHTML={{
+                      __html: targetAudience
+                        .replace(/^#{1,3}\s+\*\*(.*?)\*\*/gm, '<h3 class="text-base font-bold text-white mt-3 mb-2">$1</h3>')
+                        .replace(/^#{1,3}\s+(.*?)$/gm, '<h3 class="text-base font-bold text-white mt-3 mb-2">$1</h3>')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-cyan-50 font-semibold">$1</strong>')
+                        .replace(/^- \*\*(.*?):\*\*(.*?)$/gm, '<div class="flex items-start gap-2 mb-1.5"><span class="text-cyan-400 mt-1">•</span><div><strong class="text-cyan-50">$1:</strong><span class="text-cyan-100/80">$2</span></div></div>')
+                        .replace(/^- (.*?)$/gm, '<div class="flex items-start gap-2 mb-1.5"><span class="text-cyan-400 mt-1">•</span><span class="text-cyan-100/80">$1</span></div>')
+                        .replace(/\n\n/g, '<div class="h-2"></div>')
+                    }}
+                  />
+                </div>
+                <div className="pt-3 border-t border-cyan-500/20 flex-shrink-0">
+                  <div className="flex items-center space-x-2">
+                    <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <p className="text-xs text-cyan-300">AI-Generated Analysis</p>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="flex items-center justify-center flex-1">
+                <div className="text-center">
+                  <div className="w-8 h-8 border-2 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin mx-auto mb-2"></div>
+                  <p className="text-sm text-cyan-300/70">Analyzing your audience...</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -217,7 +271,7 @@ export default function Dashboard() {
         )}
       </div>
 
-      <style jsx>{`
+      <style jsx global>{`
         @keyframes fadeIn {
           from {
             opacity: 0;
@@ -228,8 +282,34 @@ export default function Dashboard() {
             transform: translateY(0);
           }
         }
-        :global(.animate-fadeIn) {
+        .animate-fadeIn {
           animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Custom scrollbar for target audience */
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(6, 182, 212, 0.05);
+          border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(6, 182, 212, 0.3);
+          border-radius: 10px;
+          transition: background 0.2s ease;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(6, 182, 212, 0.5);
+        }
+
+        /* Firefox */
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(6, 182, 212, 0.3) rgba(6, 182, 212, 0.05);
         }
       `}</style>
     </main>

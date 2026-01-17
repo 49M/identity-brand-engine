@@ -11,6 +11,7 @@ export interface MetaMemory {
   backboardSessionId?: string // Backboard.io thread ID for conversations
   backboardAssistantId?: string // Backboard.io assistant ID
   backboardDocumentId?: string // Backboard.io profile document ID
+  targetAudience?: string
   flags: {
     needsReanalysis: boolean
   }
@@ -30,6 +31,7 @@ export interface ProfileMemory {
       painPoints: string[]
     }
     platforms: string[]
+    aiGeneratedSummary?: string // AI-generated target audience analysis from Backboard
   }
   constraints: {
     postingFrequency: string

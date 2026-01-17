@@ -20,7 +20,7 @@ export interface CreatorSession {
 }
 
 export interface ModelSelection {
-  model: 'claude' | 'gpt-4' | 'gemini' | 'cohere' | 'grok'
+  model: 'claude-sonnet-4-20250514' | 'gpt-5-mini' | 'gemini-2.5-flash' | 'command-a-03-2025' | 'grok-3'
   provider: 'anthropic' | 'openai' | 'google' | 'cohere' | 'xai'
   reason: string
 }

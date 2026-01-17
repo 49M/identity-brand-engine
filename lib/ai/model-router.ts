@@ -21,37 +21,37 @@ import type { ModelSelection, AIResponse, VideoAnalysisContext, ContentGeneratio
 export function selectModelForTask(task: string): ModelSelection {
   const taskMap: Record<string, ModelSelection> = {
     'tone_analysis': {
-      model: 'claude',
+      model: 'claude-sonnet-4-20250514',
       provider: 'anthropic',
       reason: 'Superior at nuanced communication analysis and understanding tone/voice'
     },
     'identity_reasoning': {
-      model: 'claude',
+      model: 'claude-sonnet-4-20250514',
       provider: 'anthropic',
       reason: 'Excels at complex identity and brand positioning analysis'
     },
     'content_generation': {
-      model: 'gpt-4',
+      model: 'gpt-5-mini',
       provider: 'openai',
       reason: 'Best-in-class creative ideation with diverse angles'
     },
     'voice_matching': {
-      model: 'claude',
+      model: 'claude-sonnet-4-20250514',
       provider: 'anthropic',
       reason: 'Exceptional at matching and refining specific communication styles'
     },
     'strategic_ranking': {
-      model: 'gemini',
+      model: 'gemini-2.5-flash',
       provider: 'google',
       reason: 'Strong reasoning for pattern detection and strategic prioritization'
     },
     'quick_summary': {
-      model: 'cohere',
+      model: 'command-a-03-2025',
       provider: 'cohere',
       reason: 'Fast, efficient compression and summarization'
     },
     'trend_analysis': {
-      model: 'grok',
+      model: 'grok-3',
       provider: 'xai',
       reason: 'Real-time analysis and engagement pattern detection'
     }
@@ -265,24 +265,24 @@ ${prompt}
 function getBackboardModelId(model: ModelSelection): string {
   // Map to Backboard.io model identifiers
   const modelMap: Record<string, string> = {
-    'claude': 'anthropic/claude-3.5-sonnet',
-    'gpt-4': 'openai/gpt-4-turbo',
-    'gemini': 'google/gemini-pro',
-    'cohere': 'cohere/command',
-    'grok': 'xai/grok-beta'
+    'claude-sonnet-4-20250514': 'anthropic/claude-sonnet-4-20250514',
+    'gpt-5-mini': 'openai/gpt-5-mini',
+    'gemini-2.5-flash': 'google/gemini-2.5-flash',
+    'command-a-03-2025': 'cohere/command-a-03-2025',
+    'grok-3': 'xai/grok-3'
   }
 
-  return modelMap[model.model] || 'anthropic/claude-3.5-sonnet'
+  return modelMap[model.model] || 'anthropic/claude-sonnet-4-20250514'
 }
 
 function getTemperatureForTask(model: string): number {
   // Higher temperature for creative tasks, lower for analytical
   const temperatureMap: Record<string, number> = {
-    'claude': 0.3,      // Analytical precision
-    'gpt-4': 0.8,       // Creative diversity
-    'gemini': 0.4,      // Strategic reasoning
-    'cohere': 0.2,      // Factual summary
-    'grok': 0.5         // Balanced analysis
+    'claude-sonnet-4-20250514': 0.3,      // Analytical precision
+    'gpt-5-mini': 0.8,                    // Creative diversity
+    'gemini-2.5-flash': 0.4,              // Strategic reasoning
+    'command-a-03-2025': 0.2,             // Factual summary
+    'grok-3': 0.5                         // Balanced analysis
   }
 
   return temperatureMap[model] || 0.5
@@ -293,11 +293,11 @@ function getTemperatureForTask(model: string): number {
  */
 export function getModelDisplayName(model: ModelSelection): string {
   const displayMap: Record<string, string> = {
-    'claude': '🧠 Claude (Anthropic)',
-    'gpt-4': '💡 GPT-4 (OpenAI)',
-    'gemini': '🎯 Gemini (Google)',
-    'cohere': '⚡ Command (Cohere)',
-    'grok': '📊 Grok (xAI)'
+    'claude-sonnet-4-20250514': '🧠 Claude Sonnet 4 (Anthropic)',
+    'gpt-5-mini': '💡 GPT-5 Mini (OpenAI)',
+    'gemini-2.5-flash': '🎯 Gemini 2.5 Flash (Google)',
+    'command-a-03-2025': '⚡ Command A (Cohere)',
+    'grok-3': '📊 Grok 3 (xAI)'
   }
 
   return displayMap[model.model] || model.model

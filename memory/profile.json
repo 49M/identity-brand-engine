@@ -1,9 +1,9 @@
 {
   "creator": {
-    "name": "Developian",
+    "name": "Michal",
     "experienceLevel": "beginner",
     "background": [
-      "Motivation & Productivity"
+      "Sports Content + Trickshots"
     ],
     "goals": [
       "grow personal brand",
@@ -14,18 +14,19 @@
     "targetViewer": {
       "ageRange": "18-35",
       "interests": [
-        "Motivation & Productivity"
+        "Sports Content + Trickshots"
       ],
       "painPoints": []
     },
-    "platforms": []
+    "platforms": [],
+    "aiGeneratedSummary": "Based on Michal's creator profile document, here's the ideal target audience summary:\n\n## **Target Audience Profile**\n\n### **Demographics**\n- **Age:** 18-35 years old\n- **Primary interests:** Sports and trickshots\n\n### **Content Preferences**\n- **Format:** 30-second videos (bite-sized, digestible content)\n- **Content type:** Tactical, how-to, and actionable sports content\n- **Tone preference:** Calm, measured approach with practical guidance\n- **Learning style:** Visual learners who prefer step-by-step instruction\n\n### **Platform Behavior**\n- **Posting frequency expectation:** Daily content consumption\n- **Engagement style:** Looking for educational content from an expert/educator figure\n- **Content consumption:** Short-form video content that delivers quick value\n\n### **Content Needs**\n- **Educational:** How-to tutorials and tactical breakdowns\n- **Practical:** Actionable tips they can immediately apply\n- **Skill development:** Learning new trickshots and improving sports techniques\n- **Consistent learning:** Regular, bite-sized lessons that build expertise over time\n\n### **Strategic Application**\nThis audience values **quality instruction over flashy entertainment**. They want to learn and improve their skills through calm, methodical teaching. Focus on delivering clear, practical value in every 30-second video while maintaining your educator-expert authority in the sports and trickshots niche."
   },
   "constraints": {
     "postingFrequency": "daily",
     "videoLengthSeconds": 30,
     "tone": [
-      "aggressive",
-      "intense"
+      "calm",
+      "measured"
     ]
   }
 }

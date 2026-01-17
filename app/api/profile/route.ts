@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { writeMemory, initializeMemory, readMemory } from '@/lib/memory'
-import { getOrCreateAssistant, uploadCreatorProfile, createCreatorThread } from '@/lib/ai/backboard-initialize'
+import { getOrCreateAssistant, uploadCreatorProfile, createCreatorThread, getInitialTargetAudience } from '@/lib/ai/backboard-initialize'
 
 export async function POST(request: NextRequest) {
   try {
@@ -106,15 +106,24 @@ export async function POST(request: NextRequest) {
       console.log('💬 Step 3: Creating thread for creator...')
       const threadId = await createCreatorThread(assistantId)
 
+      console.log('🎯 Step 4: Generating target audience analysis...')
+      const targetAudience = await getInitialTargetAudience(threadId)
+
       console.log('✅ Backboard initialization complete!')
 
-      // Store Backboard IDs in meta
+      // Update profile with AI-generated target audience summary
+      const updatedProfile = await readMemory('profile')
+      updatedProfile.audience.aiGeneratedSummary = targetAudience
+      await writeMemory('profile', updatedProfile)
+
+      // Store Backboard IDs in meta (keep targetAudience here too for backward compatibility)
       await writeMemory('meta', {
         onboardingComplete: true,
         backboardSessionId: threadId,
         backboardAssistantId: assistantId,
         backboardDocumentId: documentId,
-        lastUpdated: new Date().toISOString()
+        lastUpdated: new Date().toISOString(),
+        targetAudience: targetAudience
       })
 
       return NextResponse.json({
@@ -127,7 +136,8 @@ export async function POST(request: NextRequest) {
           backboard: {
             assistantId,
             threadId,
-            documentId
+            documentId,
+            targetAudience
           }
         }
       })

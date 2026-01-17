@@ -3,6 +3,7 @@ import type { ProfileMemory, BrandMemory } from '@/lib/memory/types'
 import { writeFile, unlink } from 'fs/promises'
 import { join } from 'path'
 import { tmpdir } from 'os'
+import { selectModelForTask } from './model-router'
 
 // Singleton Backboard client
 let backboardClient: InstanceType<typeof BackboardClient> | null = null
@@ -183,5 +184,23 @@ export async function createCreatorThread(assistantId: string): Promise<string> 
   } catch (error) {
     console.error('Failed to create thread:', error)
     throw new Error('Could not create thread')
+  }
+}
+
+export async function getInitialTargetAudience(threadId: string): Promise<string> {
+  const client = getBackboardClient();
+  try {
+    const response = await client.addMessage(threadId, {
+      content: 'Based on the creator profile document provided, please summarize the ideal target audience for this content creator. Include demographics, interests, platforms they are most active on, content needs, and any other useful information. Keep it concise and very easy to follow and apply into the creators content strategy.',
+      memory: 'Auto',
+      llm_provider: selectModelForTask('identity_reasoning').provider,
+      model_name: selectModelForTask('identity_reasoning').model,
+      web_search: 'Auto'
+    })
+
+    return response.content || 'Unable to generate target audience summary'
+  } catch (err) {
+    console.error('Failed to get initial target audience:', err);
+    throw new Error('Could not get initial target audience');
   }
 }

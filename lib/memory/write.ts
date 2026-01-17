@@ -14,6 +14,7 @@ type MemoryTypeMap = {
   brand: BrandMemory
   content: ContentMemory
   insights: InsightsMemory
+  targetAudience: string
 }
 
 interface WriteOptions {

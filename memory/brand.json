@@ -2,27 +2,27 @@
   "persona": {
     "archetype": "Educator-Expert",
     "coreThemes": [
-      "Motivation & Productivity",
-      "philosophical",
-      "conceptual",
-      "big-picture"
+      "Sports Content + Trickshots",
+      "tactical",
+      "how-to",
+      "actionable"
     ],
     "voice": {
       "style": [
-        "aggressive",
-        "intense"
+        "calm",
+        "measured"
       ],
-      "pacing": "fast",
+      "pacing": "slow",
       "emotionalRange": [
-        "motivational",
-        "inspiring"
+        "balanced",
+        "practical"
       ]
     }
   },
   "positioning": {
     "whatYouAreKnownFor": [
-      "Motivation & Productivity",
-      "philosophical"
+      "Sports Content + Trickshots",
+      "tactical"
     ],
     "whatYouAvoid": []
   },

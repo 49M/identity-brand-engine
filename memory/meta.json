@@ -1,13 +1,14 @@
 {
   "version": "0.1.0",
   "createdAt": "2026-01-17T00:00:00Z",
-  "lastUpdated": "2026-01-17T15:57:35.215Z",
+  "lastUpdated": "2026-01-17T18:05:39.765Z",
   "onboardingComplete": true,
   "activePersonaId": "primary",
   "flags": {
     "needsReanalysis": false
   },
-  "backboardSessionId": "d06c555e-8a31-40ef-98f1-6815139ed322",
-  "backboardAssistantId": "544b4f5f-2080-4f62-896f-8d3a034b3847",
-  "backboardDocumentId": "f49cba20-1b6d-4ecd-9a8a-8fc851d50f1e"
+  "backboardSessionId": "dae81661-399f-491d-b2a1-716f568e5ad3",
+  "backboardAssistantId": "93ed53d4-2487-4746-be9b-85f576b29429",
+  "backboardDocumentId": "5033de56-c9c7-48d7-a154-c1cb4e48f221",
+  "targetAudience": "Based on Michal's creator profile document, here's the ideal target audience summary:\n\n## **Target Audience Profile**\n\n### **Demographics**\n- **Age:** 18-35 years old\n- **Primary interests:** Sports and trickshots\n\n### **Content Preferences**\n- **Format:** 30-second videos (bite-sized, digestible content)\n- **Content type:** Tactical, how-to, and actionable sports content\n- **Tone preference:** Calm, measured approach with practical guidance\n- **Learning style:** Visual learners who prefer step-by-step instruction\n\n### **Platform Behavior**\n- **Posting frequency expectation:** Daily content consumption\n- **Engagement style:** Looking for educational content from an expert/educator figure\n- **Content consumption:** Short-form video content that delivers quick value\n\n### **Content Needs**\n- **Educational:** How-to tutorials and tactical breakdowns\n- **Practical:** Actionable tips they can immediately apply\n- **Skill development:** Learning new trickshots and improving sports techniques\n- **Consistent learning:** Regular, bite-sized lessons that build expertise over time\n\n### **Strategic Application**\nThis audience values **quality instruction over flashy entertainment**. They want to learn and improve their skills through calm, methodical teaching. Focus on delivering clear, practical value in every 30-second video while maintaining your educator-expert authority in the sports and trickshots niche."
 }

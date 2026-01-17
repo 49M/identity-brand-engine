@@ -21,15 +21,99 @@ interface GetIdeasPanelProps {
   }
 }
 
+type Platform = 'YouTube' | 'TikTok' | 'Instagram' | 'Twitter' | 'LinkedIn'
+
 export default function GetIdeasPanel({ onClose, profileData }: GetIdeasPanelProps) {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [chatInput, setChatInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform>('YouTube')
+  const [profileUrl, setProfileUrl] = useState('')
+  const [analysisProfile, setAnalysisProfile] = useState(false)
+  const [showUrlSection, setShowUrlSection] = useState(true)
+  const [urlError, setUrlError] = useState('')
   const chatEndRef = useRef<HTMLDivElement>(null)
+
+  const platforms: { name: Platform; icon: string; placeholder: string; color: string; urlPattern: RegExp }[] = [
+    {
+      name: 'YouTube',
+      icon: '',
+      placeholder: 'https://youtube.com/@yourhandle',
+      color: 'rgb(255, 0, 0)',
+      urlPattern: /^https?:\/\/(www\.)?(youtube\.com\/((@[^\/]+)|c\/[^\/]+|channel\/[^\/]+|user\/[^\/]+)|youtu\.be\/)/i
+    },
+    {
+      name: 'TikTok',
+      icon: '',
+      placeholder: 'https://tiktok.com/@yourhandle',
+      color: 'rgb(0, 242, 234)',
+      urlPattern: /^https?:\/\/(www\.)?(tiktok\.com\/@[^\/]+|vm\.tiktok\.com\/)/i
+    },
+    {
+      name: 'Instagram',
+      icon: '',
+      placeholder: 'https://instagram.com/yourhandle',
+      color: 'rgb(225, 48, 108)',
+      urlPattern: /^https?:\/\/(www\.)?instagram\.com\/[^\/]+/i
+    },
+    {
+      name: 'Twitter',
+      icon: '',
+      placeholder: 'https://x.com/yourhandle',
+      color: 'rgb(0, 0, 0)',
+      urlPattern: /^https?:\/\/(www\.)?(twitter\.com\/[^\/]+|x\.com\/[^\/]+)/i
+    },
+    {
+      name: 'LinkedIn',
+      icon: '',
+      placeholder: 'https://linkedin.com/in/yourhandle',
+      color: 'rgb(0, 119, 181)',
+      urlPattern: /^https?:\/\/(www\.)?linkedin\.com\/(in|company)\/[^\/]+/i
+    },
+  ]
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [chatMessages])
+
+  const validateUrl = (url: string, platform: Platform): boolean => {
+    if (!url.trim()) {
+      setUrlError('')
+      return false
+    }
+
+    const platformData = platforms.find(p => p.name === platform)
+    if (!platformData) return false
+
+    const isValid = platformData.urlPattern.test(url)
+    if (!isValid) {
+      setUrlError(`Please enter a valid ${platform === 'Twitter' ? 'X' : platform} profile URL`)
+    } else {
+      setUrlError('')
+    }
+
+    return isValid
+  }
+
+  const handleUrlChange = (url: string) => {
+    setProfileUrl(url)
+    if (url.trim()) {
+      validateUrl(url, selectedPlatform)
+    } else {
+      setUrlError('')
+    }
+  }
+
+  const handlePlatformChange = (platform: Platform) => {
+    setSelectedPlatform(platform)
+    setAnalysisProfile(false)
+    if (profileUrl.trim()) {
+      const valid = validateUrl(profileUrl, platform)
+      if (!valid) {
+        setProfileUrl('')
+      }
+    }
+  }
 
   const handleSendMessage = async () => {
     if (!chatInput.trim() || isLoading) return
@@ -75,6 +159,117 @@ This format matches your voice style while providing actionable value. The contr
         </button>
       </div>
 
+      {/* Profile URL Section */}
+      {showUrlSection && (
+        <div className="bg-gradient-to-br from-pink-500/10 to-purple-500/10 border border-pink-500/30 rounded-xl p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-pink-500/20 rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-white">Connect Your Profile</h3>
+            </div>
+            <button
+              onClick={() => setShowUrlSection(false)}
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <p className="text-sm text-pink-200 mb-4">
+            Paste your profile URL to get AI-powered content ideas based on your existing content
+          </p>
+
+          {/* Platform Selection */}
+          <div className="grid grid-cols-3 md:grid-cols-5 gap-2 mb-4">
+            {platforms.map((platform) => {
+              const isSelected = selectedPlatform === platform.name
+              const displayName = platform.name === 'Twitter' ? 'X' : platform.name
+
+              return (
+                <button
+                  key={platform.name}
+                  onClick={() => handlePlatformChange(platform.name)}
+                  className={`px-3 py-2.5 rounded-lg border-2 font-semibold text-sm transition-all ${
+                    isSelected
+                      ? 'text-white shadow-lg'
+                      : 'bg-white/5 border-white/10 text-gray-300 hover:border-white/30'
+                  }`}
+                  style={isSelected ? {
+                    backgroundColor: platform.color,
+                    borderColor: platform.color,
+                    boxShadow: `0 4px 12px ${platform.color}40`
+                  } : {}}
+                >
+                  {displayName}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* URL Input */}
+          <div>
+            <div className="flex gap-2">
+              <input
+                type="url"
+                value={profileUrl}
+                onChange={(e) => handleUrlChange(e.target.value)}
+                placeholder={platforms.find(p => p.name === selectedPlatform)?.placeholder}
+                className={`flex-1 bg-white/10 border rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-all ${
+                  urlError
+                    ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/50'
+                    : 'border-white/20 focus:border-pink-500 focus:ring-pink-500/50'
+                }`}
+              />
+              {!analysisProfile && (
+                <button
+                  onClick={() => {
+                    if (profileUrl.trim() && validateUrl(profileUrl, selectedPlatform)) {
+                      // TODO: Handle profile URL submission
+                      console.log('Profile URL:', profileUrl, 'Platform:', selectedPlatform)
+                      setAnalysisProfile(true);
+                    }
+                  }}
+                  disabled={!profileUrl.trim() || !!urlError}
+                  className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-semibold px-6 py-3 rounded-lg hover:shadow-lg hover:shadow-pink-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  <span className="hidden sm:inline">Analyze</span>
+                </button>
+              )}
+            </div>
+            {urlError && (
+              <p className="text-red-400 text-sm mt-2 flex items-center gap-1">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {urlError}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Show URL Section Button (when collapsed) */}
+      {!showUrlSection && (
+        <button
+          onClick={() => setShowUrlSection(true)}
+          className="w-full mb-4 px-4 py-3 bg-pink-500/10 hover:bg-pink-500/20 border border-pink-500/30 rounded-lg text-pink-300 font-medium transition-all flex items-center justify-center gap-2"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+          Connect Profile URL
+        </button>
+      )}
+
       {/* Chat Messages */}
       <div className="bg-black/20 rounded-xl p-4 mb-4 h-96 overflow-y-auto space-y-4">
         {chatMessages.length === 0 ? (
@@ -86,7 +281,7 @@ This format matches your voice style while providing actionable value. The contr
                 </svg>
               </div>
               <p className="text-gray-400 mb-2">Ask the AI for content ideas tailored to your brand</p>
-              <p className="text-gray-500 text-sm">Try: "Give me 3 video ideas for this week"</p>
+              <p className="text-gray-500 text-sm">{`Try: "Give me 3 video ideas for this week"`}</p>
             </div>
           </div>
         ) : (

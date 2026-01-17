@@ -539,7 +539,7 @@ export default function CreateProfile() {
                   Content Platforms
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {['YouTube', 'TikTok', 'Instagram', 'Twitter/X', 'LinkedIn', 'Twitch'].map((platform) => (
+                  {['YouTube', 'TikTok', 'Instagram', 'Twitter/X', 'LinkedIn'].map((platform) => (
                     <button
                       key={platform}
                       onClick={() => togglePlatform(platform)}

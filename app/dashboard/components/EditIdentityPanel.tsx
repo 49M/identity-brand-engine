@@ -492,7 +492,7 @@ export default function EditIdentityPanel({ onClose, currentDimensions, currentP
         <div>
           <label className="block text-white font-semibold mb-2">Platforms</label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {['YouTube', 'TikTok', 'Instagram', 'Twitter/X', 'LinkedIn', 'Twitch'].map((platform) => (
+            {['YouTube', 'TikTok', 'Instagram', 'Twitter/X', 'LinkedIn'].map((platform) => (
               <button
                 key={platform}
                 onClick={() => togglePlatform(platform)}

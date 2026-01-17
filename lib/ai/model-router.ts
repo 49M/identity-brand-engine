@@ -31,7 +31,7 @@ export function selectModelForTask(task: string): ModelSelection {
       reason: 'Excels at complex identity and brand positioning analysis'
     },
     'content_generation': {
-      model: 'gpt-5-mini',
+      model: 'gpt-5-chat-latest',
       provider: 'openai',
       reason: 'Best-in-class creative ideation with diverse angles'
     },
@@ -266,7 +266,7 @@ function getBackboardModelId(model: ModelSelection): string {
   // Map to Backboard.io model identifiers
   const modelMap: Record<string, string> = {
     'claude-sonnet-4-20250514': 'anthropic/claude-sonnet-4-20250514',
-    'gpt-5-mini': 'openai/gpt-5-mini',
+    'gpt-5-chat-latest': 'openai/gpt-5-chat-latest',
     'gemini-2.5-flash': 'google/gemini-2.5-flash',
     'command-a-03-2025': 'cohere/command-a-03-2025',
     'grok-3': 'xai/grok-3'
@@ -279,7 +279,7 @@ function getTemperatureForTask(model: string): number {
   // Higher temperature for creative tasks, lower for analytical
   const temperatureMap: Record<string, number> = {
     'claude-sonnet-4-20250514': 0.3,      // Analytical precision
-    'gpt-5-mini': 0.8,                    // Creative diversity
+    'gpt-5-chat-latest': 0.8,                    // Creative diversity
     'gemini-2.5-flash': 0.4,              // Strategic reasoning
     'command-a-03-2025': 0.2,             // Factual summary
     'grok-3': 0.5                         // Balanced analysis
@@ -294,7 +294,7 @@ function getTemperatureForTask(model: string): number {
 export function getModelDisplayName(model: ModelSelection): string {
   const displayMap: Record<string, string> = {
     'claude-sonnet-4-20250514': '🧠 Claude Sonnet 4 (Anthropic)',
-    'gpt-5-mini': '💡 GPT-5 Mini (OpenAI)',
+    'gpt-5-chat-latest': '💡 GPT-5 Mini (OpenAI)',
     'gemini-2.5-flash': '🎯 Gemini 2.5 Flash (Google)',
     'command-a-03-2025': '⚡ Command A (Cohere)',
     'grok-3': '📊 Grok 3 (xAI)'

@@ -2,17 +2,17 @@
   "persona": {
     "archetype": "Educator-Expert",
     "coreThemes": [
-      "Sports Content + Trickshots",
+      "Business",
       "tactical",
       "how-to",
       "actionable"
     ],
     "voice": {
       "style": [
-        "calm",
-        "measured"
+        "aggressive",
+        "intense"
       ],
-      "pacing": "slow",
+      "pacing": "fast",
       "emotionalRange": [
         "balanced",
         "practical"
@@ -21,7 +21,7 @@
   },
   "positioning": {
     "whatYouAreKnownFor": [
-      "Sports Content + Trickshots",
+      "Business",
       "tactical"
     ],
     "whatYouAvoid": []

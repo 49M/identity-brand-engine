@@ -10,16 +10,76 @@ interface IdentityDimensions {
   Risk: number
 }
 
+interface ProfileData {
+  experienceLevel: 'beginner' | 'intermediate' | 'advanced'
+  goals: string[]
+  ageRange: string
+  interests: string[]
+  painPoints: string[]
+  platforms: string[]
+  postingFrequency: string
+  videoLengthSeconds: number
+}
+
 interface EditIdentityPanelProps {
   onClose: () => void
   currentDimensions: IdentityDimensions
-  onSave: (newDimensions: IdentityDimensions) => Promise<void>
+  currentProfile: ProfileData
+  onSave: (newDimensions: IdentityDimensions, newProfile: ProfileData) => Promise<void>
 }
 
-export default function EditIdentityPanel({ onClose, currentDimensions, onSave }: EditIdentityPanelProps) {
+export default function EditIdentityPanel({ onClose, currentDimensions, currentProfile, onSave }: EditIdentityPanelProps) {
+  const [activeTab, setActiveTab] = useState<'dimensions' | 'profile'>('dimensions')
   const [dimensions, setDimensions] = useState<IdentityDimensions>(currentDimensions)
+  const [profile, setProfile] = useState<ProfileData>(currentProfile)
   const [isSaving, setIsSaving] = useState(false)
   const [showComparison, setShowComparison] = useState(false)
+
+  // Tag input states
+  const [goalInput, setGoalInput] = useState('')
+  const [interestInput, setInterestInput] = useState('')
+  const [painPointInput, setPainPointInput] = useState('')
+
+  // Helper functions for tag management
+  const addGoal = () => {
+    if (goalInput.trim() && !profile.goals.includes(goalInput.trim())) {
+      setProfile({ ...profile, goals: [...profile.goals, goalInput.trim()] })
+      setGoalInput('')
+    }
+  }
+  const removeGoal = (goal: string) => setProfile({ ...profile, goals: profile.goals.filter(g => g !== goal) })
+
+  const addInterest = () => {
+    if (interestInput.trim() && !profile.interests.includes(interestInput.trim())) {
+      setProfile({ ...profile, interests: [...profile.interests, interestInput.trim()] })
+      setInterestInput('')
+    }
+  }
+  const removeInterest = (interest: string) => setProfile({ ...profile, interests: profile.interests.filter(i => i !== interest) })
+
+  const addPainPoint = () => {
+    if (painPointInput.trim() && !profile.painPoints.includes(painPointInput.trim())) {
+      setProfile({ ...profile, painPoints: [...profile.painPoints, painPointInput.trim()] })
+      setPainPointInput('')
+    }
+  }
+  const removePainPoint = (point: string) => setProfile({ ...profile, painPoints: profile.painPoints.filter(p => p !== point) })
+
+  const togglePlatform = (platform: string) => {
+    if (profile.platforms.includes(platform)) {
+      setProfile({ ...profile, platforms: profile.platforms.filter(p => p !== platform) })
+    } else {
+      setProfile({ ...profile, platforms: [...profile.platforms, platform] })
+    }
+  }
+
+  // Convert seconds to min:sec for display
+  const videoMinutes = Math.floor(profile.videoLengthSeconds / 60)
+  const videoSeconds = profile.videoLengthSeconds % 60
+
+  const setVideoLength = (minutes: number, seconds: number) => {
+    setProfile({ ...profile, videoLengthSeconds: minutes * 60 + seconds })
+  }
 
   // Calculate overall difference percentage
   const calculateTotalDifference = () => {
@@ -71,13 +131,15 @@ export default function EditIdentityPanel({ onClose, currentDimensions, onSave }
   const handleSave = async () => {
     setIsSaving(true)
     try {
-      await onSave(dimensions)
+      await onSave(dimensions, profile)
     } finally {
       setIsSaving(false)
     }
   }
 
-  const hasChanges = calculateTotalDifference() > 0
+  const hasProfileChanges = JSON.stringify(profile) !== JSON.stringify(currentProfile)
+  const hasDimensionChanges = calculateTotalDifference() > 0
+  const hasChanges = hasDimensionChanges || hasProfileChanges
 
   useEffect(() => {
     setShowComparison(hasChanges)
@@ -107,6 +169,31 @@ export default function EditIdentityPanel({ onClose, currentDimensions, onSave }
         </button>
       </div>
 
+      {/* Tabs */}
+      <div className="flex gap-2 mb-6 border-b border-white/10">
+        <button
+          onClick={() => setActiveTab('dimensions')}
+          className={`px-6 py-3 font-semibold transition-all ${
+            activeTab === 'dimensions'
+              ? 'text-orange-400 border-b-2 border-orange-400'
+              : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          Identity Dimensions
+        </button>
+        <button
+          onClick={() => setActiveTab('profile')}
+          className={`px-6 py-3 font-semibold transition-all ${
+            activeTab === 'profile'
+              ? 'text-orange-400 border-b-2 border-orange-400'
+              : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          Profile Details
+        </button>
+      </div>
+
+      {activeTab === 'dimensions' ? (
       <div className="grid lg:grid-cols-2 gap-8">
         {/* Left Column: Sliders */}
         <div className="space-y-6">
@@ -241,11 +328,242 @@ export default function EditIdentityPanel({ onClose, currentDimensions, onSave }
           )}
         </div>
       </div>
+      ) : (
+      <div className="space-y-6 max-w-4xl">
+        {/* Experience Level */}
+        <div>
+          <label className="block text-white font-semibold mb-2">Experience Level</label>
+          <select
+            value={profile.experienceLevel}
+            onChange={(e) => setProfile({ ...profile, experienceLevel: e.target.value as 'beginner' | 'intermediate' | 'advanced' })}
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-orange-500 focus:outline-none"
+          >
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
+
+        {/* Goals */}
+        <div>
+          <label className="block text-white font-semibold mb-2">Goals</label>
+          <div className="flex gap-2 mb-3">
+            <input
+              type="text"
+              value={goalInput}
+              onChange={(e) => setGoalInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && addGoal()}
+              placeholder="Add a goal..."
+              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-orange-500 focus:outline-none"
+            />
+            <button
+              onClick={addGoal}
+              className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+            >
+              Add
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {['grow personal brand', 'increase engagement', 'monetize content', 'build community'].map((suggestion) => (
+              <button
+                key={suggestion}
+                onClick={() => {
+                  if (!profile.goals.includes(suggestion)) {
+                    setProfile({ ...profile, goals: [...profile.goals, suggestion] })
+                  }
+                }}
+                className="px-3 py-1 bg-white/5 hover:bg-orange-500/20 text-gray-300 hover:text-orange-300 text-sm rounded-full border border-white/10 hover:border-orange-500/50 transition-all"
+              >
+                + {suggestion}
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {profile.goals.map((goal) => (
+              <div key={goal} className="px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full flex items-center gap-2 border border-orange-500/30">
+                <span>{goal}</span>
+                <button onClick={() => removeGoal(goal)} className="hover:text-orange-100">×</button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Age Range */}
+        <div>
+          <label className="block text-white font-semibold mb-2">Target Audience Age Range</label>
+          <input
+            type="text"
+            value={profile.ageRange}
+            onChange={(e) => setProfile({ ...profile, ageRange: e.target.value })}
+            placeholder="e.g., 18-35"
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-orange-500 focus:outline-none"
+          />
+        </div>
+
+        {/* Interests */}
+        <div>
+          <label className="block text-white font-semibold mb-2">Target Audience Interests</label>
+          <div className="flex gap-2 mb-3">
+            <input
+              type="text"
+              value={interestInput}
+              onChange={(e) => setInterestInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && addInterest()}
+              placeholder="Add an interest..."
+              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-orange-500 focus:outline-none"
+            />
+            <button
+              onClick={addInterest}
+              className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+            >
+              Add
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {['technology', 'fitness', 'business', 'lifestyle', 'education'].map((suggestion) => (
+              <button
+                key={suggestion}
+                onClick={() => {
+                  if (!profile.interests.includes(suggestion)) {
+                    setProfile({ ...profile, interests: [...profile.interests, suggestion] })
+                  }
+                }}
+                className="px-3 py-1 bg-white/5 hover:bg-orange-500/20 text-gray-300 hover:text-orange-300 text-sm rounded-full border border-white/10 hover:border-orange-500/50 transition-all"
+              >
+                + {suggestion}
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {profile.interests.map((interest) => (
+              <div key={interest} className="px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full flex items-center gap-2 border border-orange-500/30">
+                <span>{interest}</span>
+                <button onClick={() => removeInterest(interest)} className="hover:text-orange-100">×</button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Pain Points */}
+        <div>
+          <label className="block text-white font-semibold mb-2">Target Audience Pain Points</label>
+          <div className="flex gap-2 mb-3">
+            <input
+              type="text"
+              value={painPointInput}
+              onChange={(e) => setPainPointInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && addPainPoint()}
+              placeholder="Add a pain point..."
+              className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:border-orange-500 focus:outline-none"
+            />
+            <button
+              onClick={addPainPoint}
+              className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+            >
+              Add
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {['lack of time', 'information overload', 'staying motivated', 'finding quality resources'].map((suggestion) => (
+              <button
+                key={suggestion}
+                onClick={() => {
+                  if (!profile.painPoints.includes(suggestion)) {
+                    setProfile({ ...profile, painPoints: [...profile.painPoints, suggestion] })
+                  }
+                }}
+                className="px-3 py-1 bg-white/5 hover:bg-orange-500/20 text-gray-300 hover:text-orange-300 text-sm rounded-full border border-white/10 hover:border-orange-500/50 transition-all"
+              >
+                + {suggestion}
+              </button>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {profile.painPoints.map((point) => (
+              <div key={point} className="px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full flex items-center gap-2 border border-orange-500/30">
+                <span>{point}</span>
+                <button onClick={() => removePainPoint(point)} className="hover:text-orange-100">×</button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Platforms */}
+        <div>
+          <label className="block text-white font-semibold mb-2">Platforms</label>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {['YouTube', 'TikTok', 'Instagram', 'Twitter/X', 'LinkedIn', 'Twitch'].map((platform) => (
+              <button
+                key={platform}
+                onClick={() => togglePlatform(platform)}
+                className={`px-4 py-3 rounded-lg border-2 font-semibold transition-all ${
+                  profile.platforms.includes(platform)
+                    ? 'bg-orange-500 border-orange-500 text-white'
+                    : 'bg-white/5 border-white/10 text-gray-300 hover:border-orange-500/50'
+                }`}
+              >
+                {platform}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Posting Frequency */}
+        <div>
+          <label className="block text-white font-semibold mb-2">Posting Frequency</label>
+          <select
+            value={profile.postingFrequency}
+            onChange={(e) => setProfile({ ...profile, postingFrequency: e.target.value })}
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-orange-500 focus:outline-none"
+          >
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="bi-weekly">Bi-weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+
+        {/* Video Length */}
+        <div>
+          <label className="block text-white font-semibold mb-2">Typical Video Length</label>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                min="0"
+                max="60"
+                value={videoMinutes}
+                onChange={(e) => setVideoLength(parseInt(e.target.value) || 0, videoSeconds)}
+                className="w-20 px-3 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-orange-500 focus:outline-none text-center"
+              />
+              <span className="text-gray-400">min</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                min="0"
+                max="59"
+                value={videoSeconds}
+                onChange={(e) => setVideoLength(videoMinutes, parseInt(e.target.value) || 0)}
+                className="w-20 px-3 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:border-orange-500 focus:outline-none text-center"
+              />
+              <span className="text-gray-400">sec</span>
+            </div>
+            <span className="text-gray-400 ml-4">
+              Total: {profile.videoLengthSeconds}s
+            </span>
+          </div>
+        </div>
+      </div>
+      )}
 
       {/* Action Buttons */}
       <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/10">
         <button
-          onClick={() => setDimensions(currentDimensions)}
+          onClick={() => {
+            setDimensions(currentDimensions)
+            setProfile(currentProfile)
+          }}
           disabled={!hasChanges}
           className="px-4 py-2 text-gray-400 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
@@ -271,12 +589,12 @@ export default function EditIdentityPanel({ onClose, currentDimensions, onSave }
                 Saving...
               </>
             ) : (
-              <>
+              <div className='cursor-pointer flex justify-center items-center justify-between space-x-2'>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 Save Changes
-              </>
+              </div>
             )}
           </button>
         </div>

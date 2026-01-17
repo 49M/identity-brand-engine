@@ -12,6 +12,28 @@ interface ProfileData {
     creator: {
       name: string
       background: string[]
+      experienceLevel: 'beginner' | 'intermediate' | 'advanced'
+      goals: string[]
+    }
+    audience: {
+      targetViewer: {
+        ageRange: string
+        interests: string[]
+        painPoints: string[]
+      }
+      platforms: string[]
+    }
+    constraints: {
+      postingFrequency: string
+      videoLengthSeconds: number
+      tone: string[]
+    }
+    rawDimensions?: {
+      tone: number
+      authority: number
+      depth: number
+      emotion: number
+      risk: number
     }
   }
   brand: {
@@ -34,6 +56,17 @@ interface IdentityDimensions {
   Risk: number
 }
 
+interface CurrentProfile {
+  experienceLevel: 'beginner' | 'intermediate' | 'advanced'
+  goals: string[]
+  ageRange: string
+  interests: string[]
+  painPoints: string[]
+  platforms: string[]
+  postingFrequency: string
+  videoLengthSeconds: number
+}
+
 type ActivePanel = 'upload' | 'ideas' | 'insights' | 'edit-identity' | null
 
 export default function Dashboard() {
@@ -47,6 +80,16 @@ export default function Dashboard() {
     Depth: 50,
     Emotion: 50,
     Risk: 50
+  })
+  const [currentProfile, setCurrentProfile] = useState<CurrentProfile>({
+    experienceLevel: 'beginner',
+    goals: [],
+    ageRange: '',
+    interests: [],
+    painPoints: [],
+    platforms: [],
+    postingFrequency: 'weekly',
+    videoLengthSeconds: 60
   })
 
   useEffect(() => {
@@ -66,8 +109,30 @@ export default function Dashboard() {
 
         if (data.success) {
           setProfileData(data.data)
-          // TODO: Load actual dimensions from profile creation data
-          // For now, derive from voice style
+
+          // Load rawDimensions if available
+          if (data.data.profile.rawDimensions) {
+            const raw = data.data.profile.rawDimensions
+            setIdentityDimensions({
+              Tone: raw.tone,
+              Authority: raw.authority,
+              Depth: raw.depth,
+              Emotion: raw.emotion,
+              Risk: raw.risk
+            })
+          }
+
+          // Load profile fields
+          setCurrentProfile({
+            experienceLevel: data.data.profile.creator.experienceLevel,
+            goals: data.data.profile.creator.goals,
+            ageRange: data.data.profile.audience.targetViewer.ageRange,
+            interests: data.data.profile.audience.targetViewer.interests,
+            painPoints: data.data.profile.audience.targetViewer.painPoints,
+            platforms: data.data.profile.audience.platforms,
+            postingFrequency: data.data.profile.constraints.postingFrequency,
+            videoLengthSeconds: data.data.profile.constraints.videoLengthSeconds
+          })
         }
       } catch (error) {
         console.error('Error loading profile:', error)
@@ -79,12 +144,22 @@ export default function Dashboard() {
     loadProfile()
   }, [])
 
-  const handleSaveIdentity = async (newDimensions: IdentityDimensions) => {
+  const handleSaveIdentity = async (newDimensions: IdentityDimensions, newProfile: CurrentProfile) => {
     try {
       const response = await fetch('/api/update-identity', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dimensions: newDimensions })
+        body: JSON.stringify({
+          dimensions: newDimensions,
+          experienceLevel: newProfile.experienceLevel,
+          goals: newProfile.goals,
+          ageRange: newProfile.ageRange,
+          interests: newProfile.interests,
+          painPoints: newProfile.painPoints,
+          platforms: newProfile.platforms,
+          postingFrequency: newProfile.postingFrequency,
+          videoLengthSeconds: newProfile.videoLengthSeconds
+        })
       })
 
       const data = await response.json()
@@ -92,6 +167,7 @@ export default function Dashboard() {
       if (data.success) {
         setProfileData(data.data)
         setIdentityDimensions(newDimensions)
+        setCurrentProfile(newProfile)
         setActivePanel(null)
       }
     } catch (error) {
@@ -306,6 +382,7 @@ export default function Dashboard() {
           <EditIdentityPanel
             onClose={() => setActivePanel(null)}
             currentDimensions={identityDimensions}
+            currentProfile={currentProfile}
             onSave={handleSaveIdentity}
           />
         )}

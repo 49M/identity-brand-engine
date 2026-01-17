@@ -1,32 +1,59 @@
 {
   "creator": {
-    "name": "Michal",
-    "experienceLevel": "beginner",
+    "name": "Alex Hormozi",
+    "experienceLevel": "advanced",
     "background": [
-      "Sports Content + Trickshots"
+      "Business"
     ],
     "goals": [
       "grow personal brand",
-      "create consistent content"
+      "increase engagement",
+      "monetize content",
+      "build community",
+      "buy viewer companies"
     ]
   },
   "audience": {
     "targetViewer": {
-      "ageRange": "18-35",
+      "ageRange": "22-35",
       "interests": [
-        "Sports Content + Trickshots"
+        "technology",
+        "fitness",
+        "business",
+        "marketing",
+        "sales",
+        "operations",
+        "strategy"
       ],
-      "painPoints": []
+      "painPoints": [
+        "lack of time",
+        "information overload",
+        "staying motivated",
+        "finding quality resources"
+      ]
     },
-    "platforms": [],
-    "aiGeneratedSummary": "Based on Michal's creator profile document, here's the ideal target audience summary:\n\n## **Target Audience Profile**\n\n### **Demographics**\n- **Age:** 18-35 years old\n- **Primary interests:** Sports and trickshots\n\n### **Content Preferences**\n- **Format:** 30-second videos (bite-sized, digestible content)\n- **Content type:** Tactical, how-to, and actionable sports content\n- **Tone preference:** Calm, measured approach with practical guidance\n- **Learning style:** Visual learners who prefer step-by-step instruction\n\n### **Platform Behavior**\n- **Posting frequency expectation:** Daily content consumption\n- **Engagement style:** Looking for educational content from an expert/educator figure\n- **Content consumption:** Short-form video content that delivers quick value\n\n### **Content Needs**\n- **Educational:** How-to tutorials and tactical breakdowns\n- **Practical:** Actionable tips they can immediately apply\n- **Skill development:** Learning new trickshots and improving sports techniques\n- **Consistent learning:** Regular, bite-sized lessons that build expertise over time\n\n### **Strategic Application**\nThis audience values **quality instruction over flashy entertainment**. They want to learn and improve their skills through calm, methodical teaching. Focus on delivering clear, practical value in every 30-second video while maintaining your educator-expert authority in the sports and trickshots niche."
+    "platforms": [
+      "YouTube",
+      "Twitter/X",
+      "LinkedIn",
+      "TikTok",
+      "Instagram"
+    ],
+    "aiGeneratedSummary": "Based on the creator profile document, here's Alex Hormozi's ideal target audience summary:\n\n## **Target Audience Profile**\n\n### **Demographics**\n- **Age Range:** 22-35 years old\n- **Profile:** Young professionals and entrepreneurs in their growth phase\n\n### **Core Interests**\n- Technology\n- Fitness\n- Business strategy\n- Marketing & Sales\n- Operations\n- Strategic planning\n\n### **Platform Preferences**\nAlex should focus content distribution across:\n- **YouTube** (primary long-form content)\n- **Twitter/X** (real-time engagement)\n- **LinkedIn** (professional networking)\n- **TikTok** (short-form viral content)\n- **Instagram** (visual storytelling)\n\n### **Content Needs & Strategy Application**\n- **Format:** Fast-paced, aggressive, intense delivery (25-second videos)\n- **Content Type:** Business strategies and tactical how-to content\n- **Frequency:** Daily posting for consistent engagement\n- **Tone:** Practical, balanced, actionable advice\n- **Focus:** Business education with immediate applicability\n\n### **Content Strategy Recommendations**\n1. Create bite-sized tactical business advice\n2. Focus on actionable strategies over theory\n3. Maintain high-energy, no-fluff delivery\n4. Target pain points of scaling businesses and personal growth\n5. Leverage the Educator-Expert archetype to build authority while teaching\n\nThis audience seeks quick, practical business insights they can implement immediately to grow their ventures and personal brands."
   },
   "constraints": {
     "postingFrequency": "daily",
-    "videoLengthSeconds": 30,
+    "videoLengthSeconds": 25,
     "tone": [
-      "calm",
-      "measured"
+      "aggressive",
+      "intense"
     ]
+  },
+  "rawDimensions": {
+    "tone": 30,
+    "authority": 100,
+    "depth": 35,
+    "emotion": 40,
+    "risk": 75
   }
 }

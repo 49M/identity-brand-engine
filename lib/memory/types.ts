@@ -38,6 +38,13 @@ export interface ProfileMemory {
     videoLengthSeconds: number
     tone: string[]
   }
+  rawDimensions: {
+    tone: number
+    authority: number
+    depth: number
+    emotion: number
+    risk: number
+  }
 }
 
 export interface BrandMemory {

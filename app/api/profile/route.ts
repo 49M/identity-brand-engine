@@ -5,7 +5,19 @@ import { getOrCreateAssistant, uploadCreatorProfile, createCreatorThread, getIni
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { creatorName, niche, dimensions } = body
+    const {
+      creatorName,
+      niche,
+      dimensions,
+      experienceLevel,
+      goals,
+      ageRange,
+      interests,
+      painPoints,
+      platforms,
+      postingFrequency,
+      videoLengthSeconds
+    } = body
 
     // Ensure JSON memory system is initialized
     await initializeMemory()
@@ -53,22 +65,29 @@ export async function POST(request: NextRequest) {
     await writeMemory('profile', {
       creator: {
         name: creatorName,
-        experienceLevel: 'beginner', // Can be expanded in future
+        experienceLevel: experienceLevel,
         background: [niche],
-        goals: ['grow personal brand', 'create consistent content']
+        goals: goals
       },
       audience: {
         targetViewer: {
-          ageRange: '18-35', // Default, can be customized later
-          interests: [niche],
-          painPoints: []
+          ageRange: ageRange,
+          interests: interests,
+          painPoints: painPoints
         },
-        platforms: []
+        platforms: platforms
       },
       constraints: {
-        postingFrequency: 'daily',
-        videoLengthSeconds: 30,
+        postingFrequency: postingFrequency,
+        videoLengthSeconds: videoLengthSeconds,
         tone: voiceStyle
+      },
+      rawDimensions: {
+        tone: tone,
+        authority: authority,
+        depth: depth,
+        emotion: emotion,
+        risk: risk
       }
     })
 

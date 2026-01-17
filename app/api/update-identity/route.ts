@@ -5,7 +5,17 @@ import type { ProfileMemory, BrandMemory } from '@/lib/memory/types'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { dimensions } = body
+    const {
+      dimensions,
+      experienceLevel,
+      goals,
+      ageRange,
+      interests,
+      painPoints,
+      platforms,
+      postingFrequency,
+      videoLengthSeconds
+    } = body
 
     // Read current memories
     const profileMemory = await readMemory('profile') as ProfileMemory
@@ -58,6 +68,41 @@ export async function POST(request: NextRequest) {
 
     // Update profile constraints
     profileMemory.constraints.tone = voiceStyle
+
+    // Update profile with new fields if provided
+    if (experienceLevel !== undefined) {
+      profileMemory.creator.experienceLevel = experienceLevel
+    }
+    if (goals !== undefined) {
+      profileMemory.creator.goals = goals
+    }
+    if (ageRange !== undefined) {
+      profileMemory.audience.targetViewer.ageRange = ageRange
+    }
+    if (interests !== undefined) {
+      profileMemory.audience.targetViewer.interests = interests
+    }
+    if (painPoints !== undefined) {
+      profileMemory.audience.targetViewer.painPoints = painPoints
+    }
+    if (platforms !== undefined) {
+      profileMemory.audience.platforms = platforms
+    }
+    if (postingFrequency !== undefined) {
+      profileMemory.constraints.postingFrequency = postingFrequency
+    }
+    if (videoLengthSeconds !== undefined) {
+      profileMemory.constraints.videoLengthSeconds = videoLengthSeconds
+    }
+
+    // Save rawDimensions
+    profileMemory.rawDimensions = {
+      tone,
+      authority,
+      depth,
+      emotion,
+      risk
+    }
 
     // Write updated memories
     await writeMemory('profile', profileMemory)

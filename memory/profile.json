@@ -1,0 +1,31 @@
+{
+  "creator": {
+    "name": "joe",
+    "experienceLevel": "beginner",
+    "background": [
+      "business"
+    ],
+    "goals": [
+      "grow personal brand",
+      "create consistent content"
+    ]
+  },
+  "audience": {
+    "targetViewer": {
+      "ageRange": "18-35",
+      "interests": [
+        "business"
+      ],
+      "painPoints": []
+    },
+    "platforms": []
+  },
+  "constraints": {
+    "postingFrequency": "daily",
+    "videoLengthSeconds": 30,
+    "tone": [
+      "calm",
+      "measured"
+    ]
+  }
+}

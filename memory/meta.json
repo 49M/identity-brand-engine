@@ -1,0 +1,10 @@
+{
+  "version": "0.1.0",
+  "createdAt": "2026-01-17T00:00:00Z",
+  "lastUpdated": "2026-01-17T05:21:51.600Z",
+  "onboardingComplete": true,
+  "activePersonaId": "primary",
+  "flags": {
+    "needsReanalysis": false
+  }
+}

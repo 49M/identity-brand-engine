@@ -1,0 +1,32 @@
+{
+  "persona": {
+    "archetype": "Educator-Expert",
+    "coreThemes": [
+      "business",
+      "tactical",
+      "how-to",
+      "actionable"
+    ],
+    "voice": {
+      "style": [
+        "calm",
+        "measured"
+      ],
+      "pacing": "slow",
+      "emotionalRange": [
+        "motivational",
+        "inspiring"
+      ]
+    }
+  },
+  "positioning": {
+    "whatYouAreKnownFor": [
+      "business",
+      "tactical"
+    ],
+    "whatYouAvoid": [
+      "controversial topics"
+    ]
+  },
+  "confidenceScore": 0.5
+}

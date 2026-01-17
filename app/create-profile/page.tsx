@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 type PersonaDimension = {
   label: string
@@ -50,9 +51,11 @@ const dimensions: PersonaDimension[] = [
 ]
 
 export default function CreateProfile() {
+  const router = useRouter()
   const [step, setStep] = useState(1)
   const [creatorName, setCreatorName] = useState('')
   const [niche, setNiche] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [values, setValues] = useState<Record<string, number>>({
     Tone: 50,
     Authority: 50,
@@ -73,15 +76,37 @@ export default function CreateProfile() {
     if (step > 1) setStep(step - 1)
   }
 
-  const handleComplete = () => {
-    // Save profile data
-    const profile = {
-      creatorName,
-      niche,
-      dimensions: values
+  const handleComplete = async () => {
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch('/api/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          creatorName,
+          niche,
+          dimensions: values
+        })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        // Profile created successfully, navigate to dashboard
+        router.push('/dashboard')
+      } else {
+        console.error('Failed to create profile:', data.error)
+        alert('Failed to create profile. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error creating profile:', error)
+      alert('An error occurred. Please try again.')
+    } finally {
+      setIsSubmitting(false)
     }
-    console.log('Profile created:', profile)
-    // TODO: Navigate to dashboard or next step
   }
 
   return (
@@ -373,9 +398,14 @@ export default function CreateProfile() {
           ) : (
             <button
               onClick={handleComplete}
-              className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl text-white font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all transform hover:scale-105"
+              disabled={isSubmitting}
+              className={`px-8 py-3 rounded-xl text-white font-semibold transition-all transform ${
+                isSubmitting
+                  ? 'bg-gray-600 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-purple-500 to-pink-500 hover:shadow-lg hover:shadow-purple-500/50 hover:scale-105'
+              }`}
             >
-              Create Profile
+              {isSubmitting ? 'Creating Profile...' : 'Create Profile'}
             </button>
           )}
         </div>

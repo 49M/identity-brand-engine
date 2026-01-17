@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import UploadVideoPanel from './components/UploadVideoPanel'
+import GetIdeasPanel from './components/GetIdeasPanel'
+import ViewInsightsPanel from './components/ViewInsightsPanel'
 
 interface ProfileData {
   profile: {
@@ -22,9 +25,12 @@ interface ProfileData {
   }
 }
 
+type ActivePanel = 'upload' | 'ideas' | 'insights' | null
+
 export default function Dashboard() {
   const [profileData, setProfileData] = useState<ProfileData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [activePanel, setActivePanel] = useState<ActivePanel>(null)
 
   useEffect(() => {
     async function loadProfile() {
@@ -138,8 +144,15 @@ export default function Dashboard() {
         </div>
 
         {/* Action Cards */}
-        <div className="grid md:grid-cols-3 gap-6">
-          <button className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-purple-500/50 transition-all text-left">
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <button
+            onClick={() => setActivePanel(activePanel === 'upload' ? null : 'upload')}
+            className={`bg-white/5 backdrop-blur-sm border rounded-2xl p-6 transition-all text-left ${
+              activePanel === 'upload'
+                ? 'border-purple-500 ring-2 ring-purple-500/50'
+                : 'border-white/10 hover:border-purple-500/50'
+            }`}
+          >
             <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mb-4">
               <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -149,7 +162,14 @@ export default function Dashboard() {
             <p className="text-gray-400 text-sm">Analyze your content and track identity evolution</p>
           </button>
 
-          <button className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-pink-500/50 transition-all text-left">
+          <button
+            onClick={() => setActivePanel(activePanel === 'ideas' ? null : 'ideas')}
+            className={`bg-white/5 backdrop-blur-sm border rounded-2xl p-6 transition-all text-left ${
+              activePanel === 'ideas'
+                ? 'border-pink-500 ring-2 ring-pink-500/50'
+                : 'border-white/10 hover:border-pink-500/50'
+            }`}
+          >
             <div className="w-12 h-12 bg-pink-500/20 rounded-lg flex items-center justify-center mb-4">
               <svg className="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -159,7 +179,14 @@ export default function Dashboard() {
             <p className="text-gray-400 text-sm">AI-generated content ideas that match your identity</p>
           </button>
 
-          <button className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-blue-500/50 transition-all text-left">
+          <button
+            onClick={() => setActivePanel(activePanel === 'insights' ? null : 'insights')}
+            className={`bg-white/5 backdrop-blur-sm border rounded-2xl p-6 transition-all text-left ${
+              activePanel === 'insights'
+                ? 'border-blue-500 ring-2 ring-blue-500/50'
+                : 'border-white/10 hover:border-blue-500/50'
+            }`}
+          >
             <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4">
               <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -170,13 +197,41 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* Coming Soon Notice */}
-        <div className="mt-8 bg-blue-500/10 border border-blue-500/20 rounded-xl p-4">
-          <p className="text-blue-200 text-sm">
-            <strong>Note:</strong> This is your dashboard foundation. Video upload, content ideas, and insights features are coming soon!
-          </p>
-        </div>
+        {/* Dynamic Panels */}
+        {activePanel === 'upload' && (
+          <UploadVideoPanel onClose={() => setActivePanel(null)} />
+        )}
+
+        {activePanel === 'ideas' && (
+          <GetIdeasPanel
+            onClose={() => setActivePanel(null)}
+            profileData={profileData}
+          />
+        )}
+
+        {activePanel === 'insights' && (
+          <ViewInsightsPanel
+            onClose={() => setActivePanel(null)}
+            profileData={profileData}
+          />
+        )}
       </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        :global(.animate-fadeIn) {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
     </main>
   )
 }

@@ -156,14 +156,21 @@ export default function CreateProfile() {
 
       if (data.success) {
         // Profile created successfully, navigate to dashboard
+        // Show warning if Backboard failed but profile still created
+        if (data.warning) {
+          console.warn('Profile created with warning:', data.warning)
+        }
         router.push('/dashboard')
       } else {
         console.error('Failed to create profile:', data.error)
-        alert('Failed to create profile. Please try again.')
+        const errorMsg = data.error || 'Failed to create profile'
+        const detailsMsg = data.details ? `\n\nDetails: ${data.details}` : ''
+        alert(`${errorMsg}${detailsMsg}\n\nPlease try again or check your API keys in .env.local`)
       }
     } catch (error) {
       console.error('Error creating profile:', error)
-      alert('An error occurred. Please try again.')
+      const errorMsg = error instanceof Error ? error.message : 'An error occurred'
+      alert(`${errorMsg}\n\nPlease check the browser console for more details.`)
     } finally {
       setIsSubmitting(false)
     }

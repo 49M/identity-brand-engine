@@ -3,15 +3,14 @@
     "name": "MichalCodes",
     "experienceLevel": "intermediate",
     "background": [
-      "Coding/Software Engineering"
+      "Software Engineering and Tutorials"
     ],
     "goals": [
       "grow personal brand",
       "increase engagement",
       "monetize content",
       "build community",
-      "Build audience trust",
-      "Sell my programming course"
+      "get sponsored"
     ]
   },
   "audience": {
@@ -19,37 +18,37 @@
       "ageRange": "16-30",
       "interests": [
         "technology",
-        "software",
-        "saas",
-        "startups/projects"
+        "education",
+        "software"
       ],
       "painPoints": [
-        "information overload",
         "staying motivated",
-        "finding quality resources"
+        "finding quality resources",
+        "information overload"
       ]
     },
     "platforms": [
       "YouTube",
-      "Instagram",
       "TikTok",
-      "Twitter/X",
-      "LinkedIn"
+      "Instagram",
+      "LinkedIn",
+      "Twitter/X"
     ],
-    "aiGeneratedSummary": "Based on your creator profile document, here's your ideal target audience summary:\n\n## **Target Audience Profile for MichalCodes**\n\n### **Demographics**\n- **Age Range**: 16-30 years old\n- **Primary Interests**: Technology and startups\n- **Experience Level**: Likely beginner to intermediate in coding/software engineering\n\n### **Platform Preferences**\nYour audience is active across multiple platforms where you should focus your efforts:\n- **YouTube** (long-form tutorials and explanations)\n- **Instagram** (visual coding content, behind-the-scenes)\n- **TikTok** (quick coding tips and tricks)\n- **Twitter/X** (tech discussions, coding insights)\n- **LinkedIn** (professional networking, career advice)\n\n### **Content Needs & Expectations**\n- **Format**: Short-form content (120 seconds max) that's easily digestible\n- **Style**: Tactical and actionable coding content they can immediately apply\n- **Tone**: Balanced approach (not too casual, not too formal)\n- **Frequency**: Weekly content updates for consistent engagement\n- **Focus**: Software engineering fundamentals, practical coding tips, and career guidance\n\n### **Strategic Application**\nYour audience wants **quick wins** and **practical knowledge** they can use right away. They're looking to level up their coding skills while staying current with tech trends and startup culture. Focus on bite-sized, implementable advice that fits their busy, digital-native lifestyle.\n\nThis audience profile aligns perfectly with your goal to grow your personal brand and build a community around actionable coding education."
+    "aiGeneratedSummary": "Based on your creator profile document, here's your ideal target audience summary:\n\n## Your Target Audience Profile\n\n**Demographics:**\n- Age: 16-30 years old\n- Primary interests: Technology, education, and software development\n\n**Platform Activity:**\nYour audience is most active on:\n- YouTube\n- TikTok  \n- Instagram\n- LinkedIn\n- Twitter/X\n\n**Content Needs & Positioning:**\n- They see you as a **peer-guide** rather than an expert lecturer\n- They're looking for intermediate-level software engineering content\n- They want tutorials that are approachable and relatable\n- They appreciate calm, measured delivery with balanced, practical insights\n\n**Content Strategy Application:**\n- Keep videos under 120 seconds maximum\n- Post weekly to maintain consistent engagement\n- Focus on software engineering concepts with philosophical and big-picture perspectives\n- Maintain your calm, moderate-paced delivery style\n- Balance technical tutorials with conceptual understanding\n\nThis audience values learning from someone who feels like a knowledgeable peer rather than an intimidating expert, making your intermediate positioning and measured approach perfect for building trust and engagement with this demographic across these platforms."
   },
   "constraints": {
     "postingFrequency": "weekly",
     "videoLengthSeconds": 120,
     "tone": [
-      "balanced"
+      "calm",
+      "measured"
     ]
   },
   "rawDimensions": {
-    "tone": 50,
-    "authority": 100,
-    "depth": 6,
-    "emotion": 16,
-    "risk": 69
+    "tone": 68,
+    "authority": 36,
+    "depth": 64,
+    "emotion": 50,
+    "risk": 50
   }
 }

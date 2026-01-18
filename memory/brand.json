@@ -1,27 +1,28 @@
 {
   "persona": {
-    "archetype": "Educator-Expert",
+    "archetype": "Peer-Guide",
     "coreThemes": [
-      "Coding/Software Engineering",
-      "tactical",
-      "how-to",
-      "actionable"
+      "Software Engineering and Tutorials",
+      "philosophical",
+      "conceptual",
+      "big-picture"
     ],
     "voice": {
       "style": [
-        "balanced"
+        "calm",
+        "measured"
       ],
       "pacing": "moderate",
       "emotionalRange": [
-        "analytical",
-        "logical"
+        "balanced",
+        "practical"
       ]
     }
   },
   "positioning": {
     "whatYouAreKnownFor": [
-      "Coding/Software Engineering",
-      "tactical"
+      "Software Engineering and Tutorials",
+      "philosophical"
     ],
     "whatYouAvoid": []
   },

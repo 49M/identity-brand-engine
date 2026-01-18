@@ -4,7 +4,11 @@ import { getOrCreateAssistant, uploadCreatorProfile, createCreatorThread, getIni
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('📝 Starting profile creation...')
+
     const body = await request.json()
+    console.log('✅ Request body parsed successfully')
+
     const {
       creatorName,
       niche,
@@ -22,14 +26,18 @@ export async function POST(request: NextRequest) {
     // Reset memory system to ensure clean slate for new profile
     console.log('🔄 Resetting memory for new profile creation...')
     await resetMemory()
+    console.log('✅ Memory reset complete')
 
     // Ensure JSON memory system is initialized
+    console.log('📂 Initializing memory system...')
     await initializeMemory()
+    console.log('✅ Memory system initialized')
 
     // Generate a unique creator ID (in production, use proper user ID)
     const creatorId = creatorName.toLowerCase().replace(/\s+/g, '_')
+    console.log('🆔 Creator ID:', creatorId)
 
-    console.log('🧠 Initializing Backboard for adaptive memory...')
+    console.log('🧠 Preparing profile data...')
 
     // Map the UI dimensions to brand persona data
     const tone = dimensions.Tone
@@ -189,8 +197,19 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error('Error creating profile:', error)
+
+    // Provide more detailed error message
+    const errorMessage = error instanceof Error ? error.message : 'Failed to create profile'
+    const errorDetails = error instanceof Error ? error.stack : String(error)
+
+    console.error('Full error details:', errorDetails)
+
     return NextResponse.json(
-      { success: false, error: 'Failed to create profile' },
+      {
+        success: false,
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? errorDetails : undefined
+      },
       { status: 500 }
     )
   }

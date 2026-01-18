@@ -1,14 +1,28 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 interface UploadVideoPanelProps {
   onClose: () => void
 }
 
+interface VideoAnalysis {
+  videoId: string
+  title: string
+  topics: string[]
+  hashtags: string[]
+  summary: string
+}
+
 export default function UploadVideoPanel({ onClose }: UploadVideoPanelProps) {
   const [dragActive, setDragActive] = useState(false)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [analysisProgress, setAnalysisProgress] = useState<string>('')
+  const [analysisResult, setAnalysisResult] = useState<VideoAnalysis | null>(null)
+  const [analysisError, setAnalysisError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleDrag = (e: React.DragEvent) => {
@@ -49,9 +63,36 @@ export default function UploadVideoPanel({ onClose }: UploadVideoPanelProps) {
   const handleAnalyze = async () => {
     if (!uploadedFile) return
 
-    console.log('Analyzing video:', uploadedFile.name)
-    // TODO: Integrate with TwelveLabs API
-    alert('Video analysis coming soon!')
+    setIsAnalyzing(true)
+    setAnalysisError(null)
+    setAnalysisProgress('Uploading video...')
+
+    try {
+      // Create form data
+      const formData = new FormData()
+      formData.append('video', uploadedFile)
+
+      // Upload and analyze video
+      const response = await fetch('/api/video', {
+        method: 'POST',
+        body: formData
+      })
+
+      const data = await response.json()
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to analyze video')
+      }
+
+      // Show results
+      setAnalysisResult(data.analysis)
+      setAnalysisProgress('Analysis complete!')
+    } catch (error) {
+      console.error('Video analysis failed:', error)
+      setAnalysisError(error instanceof Error ? error.message : 'Failed to analyze video')
+    } finally {
+      setIsAnalyzing(false)
+    }
   }
 
   return (
@@ -122,14 +163,173 @@ export default function UploadVideoPanel({ onClose }: UploadVideoPanelProps) {
         )}
       </div>
 
-      {uploadedFile && (
+      {uploadedFile && !analysisResult && (
         <div className="mt-6">
           <button
             onClick={handleAnalyze}
-            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 rounded-xl hover:shadow-lg hover:shadow-purple-500/50 transition-all"
+            disabled={isAnalyzing}
+            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 rounded-xl hover:shadow-lg hover:shadow-purple-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Analyze Video with AI
+            {isAnalyzing ? (
+              <span className="flex items-center justify-center">
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {analysisProgress}
+              </span>
+            ) : (
+              'Analyze Video with AI'
+            )}
           </button>
+        </div>
+      )}
+
+      {analysisError && (
+        <div className="mt-6 p-4 bg-red-500/10 border border-red-500/50 rounded-xl">
+          <p className="text-red-400 text-sm">{analysisError}</p>
+          <button
+            onClick={() => {
+              setAnalysisError(null)
+              setUploadedFile(null)
+            }}
+            className="mt-2 text-red-400 hover:text-red-300 text-sm underline"
+          >
+            Try again
+          </button>
+        </div>
+      )}
+
+      {analysisResult && (
+        <div className="mt-6 space-y-4 animate-fadeIn">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold text-white">Analysis Results</h3>
+            <button
+              onClick={() => {
+                setAnalysisResult(null)
+                setUploadedFile(null)
+              }}
+              className="text-purple-400 hover:text-purple-300 text-sm"
+            >
+              Analyze Another
+            </button>
+          </div>
+
+          {/* Title */}
+          <div className="p-4 bg-white/5 rounded-xl border border-purple-500/30">
+            <p className="text-gray-400 text-xs uppercase tracking-wide mb-2">Suggested Title</p>
+            <p className="text-white font-semibold">{analysisResult.title}</p>
+          </div>
+
+          {/* Topics */}
+          {analysisResult.topics.length > 0 && (
+            <div className="p-4 bg-white/5 rounded-xl border border-purple-500/30">
+              <p className="text-gray-400 text-xs uppercase tracking-wide mb-3">Topics</p>
+              <div className="flex flex-wrap gap-2">
+                {analysisResult.topics.map((topic, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg text-sm"
+                  >
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Hashtags */}
+          {analysisResult.hashtags.length > 0 && (
+            <div className="p-4 bg-white/5 rounded-xl border border-purple-500/30">
+              <p className="text-gray-400 text-xs uppercase tracking-wide mb-3">Hashtags</p>
+              <div className="flex flex-wrap gap-2">
+                {analysisResult.hashtags.map((hashtag, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-pink-500/20 text-pink-300 rounded-lg text-sm font-mono"
+                  >
+                    #{hashtag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Summary */}
+          <div className="p-4 bg-white/5 rounded-xl border border-purple-500/30">
+            <p className="text-gray-400 text-xs uppercase tracking-wide mb-3">Content Summary</p>
+            <div className="prose prose-invert prose-sm max-w-none">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  h1: ({ children }) => (
+                    <h1 className="text-xl font-bold mb-2 mt-3 text-white">{children}</h1>
+                  ),
+                  h2: ({ children }) => (
+                    <h2 className="text-lg font-bold mb-2 mt-3 text-white">{children}</h2>
+                  ),
+                  h3: ({ children }) => (
+                    <h3 className="text-base font-semibold mb-1.5 mt-2 text-white">{children}</h3>
+                  ),
+                  p: ({ children }) => (
+                    <p className="mb-2 text-gray-200 leading-relaxed text-sm">{children}</p>
+                  ),
+                  ul: ({ children }) => (
+                    <ul className="list-disc list-inside mb-2 space-y-1 text-gray-200 text-sm">
+                      {children}
+                    </ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="list-decimal list-inside mb-2 space-y-1 text-gray-200 text-sm">
+                      {children}
+                    </ol>
+                  ),
+                  li: ({ children }) => <li className="ml-2">{children}</li>,
+                  strong: ({ children }) => (
+                    <strong className="font-bold text-purple-300">{children}</strong>
+                  ),
+                  em: ({ children }) => <em className="italic text-pink-300">{children}</em>,
+                  code: ({ inline, children }: { inline?: boolean; children?: React.ReactNode }) =>
+                    inline ? (
+                      <code className="bg-black/30 text-pink-300 px-1.5 py-0.5 rounded text-xs font-mono">
+                        {children}
+                      </code>
+                    ) : (
+                      <code className="block bg-black/40 text-gray-200 p-2 rounded-lg text-xs font-mono overflow-x-auto mb-2">
+                        {children}
+                      </code>
+                    ),
+                  blockquote: ({ children }) => (
+                    <blockquote className="border-l-4 border-purple-500 pl-3 italic text-gray-300 my-2 text-sm">
+                      {children}
+                    </blockquote>
+                  ),
+                  a: ({ children, href }) => (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-purple-400 hover:text-purple-300 underline"
+                    >
+                      {children}
+                    </a>
+                  ),
+                  hr: () => <hr className="border-white/10 my-3" />
+                }}
+              >
+                {analysisResult.summary}
+              </ReactMarkdown>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 rounded-xl hover:shadow-lg hover:shadow-purple-500/50 transition-all"
+            >
+              Done
+            </button>
+          </div>
         </div>
       )}
     </div>

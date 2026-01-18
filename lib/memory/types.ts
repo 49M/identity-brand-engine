@@ -12,6 +12,7 @@ export interface MetaMemory {
   backboardIdeasThreadId?: string // Backboard.io thread ID for content ideas generation
   backboardAssistantId?: string // Backboard.io assistant ID
   backboardDocumentId?: string // Backboard.io profile document ID
+  twelveLabsIndexId?: string // Twelve Labs index ID for video analysis
   targetAudience?: string
   flags: {
     needsReanalysis: boolean
@@ -86,9 +87,22 @@ export interface PublishedContent {
   }
 }
 
+export interface VideoAnalysis {
+  id: string
+  taskId: string
+  fileName: string
+  fileSize: number
+  title: string
+  topics: string[]
+  hashtags: string[]
+  summary: string
+  analyzedAt: string
+}
+
 export interface ContentMemory {
   ideas: ContentIdea[]
   published: PublishedContent[]
+  videoAnalyses?: VideoAnalysis[]
 }
 
 export interface VideoSignals {

@@ -6,6 +6,7 @@ import UploadVideoPanel from './components/UploadVideoPanel'
 import GetIdeasPanel from './components/GetIdeasPanel'
 import ViewInsightsPanel from './components/ViewInsightsPanel'
 import EditIdentityPanel from './components/EditIdentityPanel'
+import TrendAnalyzerPanel from './components/TrendAnalyzerPanel'
 
 interface ProfileData {
   profile: {
@@ -67,7 +68,7 @@ interface CurrentProfile {
   videoLengthSeconds: number
 }
 
-type ActivePanel = 'upload' | 'ideas' | 'insights' | 'edit-identity' | null
+type ActivePanel = 'upload' | 'ideas' | 'insights' | 'edit-identity' | 'trends' | null
 
 export default function Dashboard() {
   const [profileData, setProfileData] = useState<ProfileData | null>(null)
@@ -430,6 +431,25 @@ export default function Dashboard() {
           </button>
 
           <button
+            onClick={() => setActivePanel(activePanel === 'trends' ? null : 'trends')}
+            className={`bg-white/5 backdrop-blur-sm border rounded-2xl p-6 transition-all text-left ${
+              activePanel === 'trends'
+                ? 'border-orange-500 ring-2 ring-orange-500/50'
+                : 'border-white/10 hover:border-orange-500/50'
+            }`}
+          >
+            <div className="w-12 h-12 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-lg flex items-center justify-center mb-4">
+              <svg className="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+              🔥 Find Trends
+            </h3>
+            <p className="text-gray-400 text-sm">Discover viral trends and adapt them to your brand</p>
+          </button>
+
+          <button
             onClick={() => setActivePanel(activePanel === 'insights' ? null : 'insights')}
             className={`bg-white/5 backdrop-blur-sm border rounded-2xl p-6 transition-all text-left ${
               activePanel === 'insights'
@@ -476,6 +496,12 @@ export default function Dashboard() {
 
         {activePanel === 'ideas' && (
           <GetIdeasPanel
+            onClose={() => setActivePanel(null)}
+          />
+        )}
+
+        {activePanel === 'trends' && (
+          <TrendAnalyzerPanel
             onClose={() => setActivePanel(null)}
           />
         )}

@@ -628,3 +628,105 @@ Using my brand identity from our conversation memory, create a COMPLETE, READY-T
     throw new Error('Could not generate video remix')
   }
 }
+
+/**
+ * Analyze viral trends in the creator's niche using web search
+ * Returns trending topics with brand-aligned adaptations
+ */
+export async function analyzeTrendingContent(
+  threadId: string,
+  niche: string,
+  brandDimensions: {
+    tone: number
+    authority: number
+    depth: number
+    emotion: number
+    risk: number
+  }
+): Promise<string> {
+  const client = getBackboardClient()
+
+  try {
+    // Create dimension descriptions for context
+    const toneDesc = brandDimensions.tone > 60 ? 'calm and measured' : brandDimensions.tone < 40 ? 'aggressive and bold' : 'balanced'
+    const authorityDesc = brandDimensions.authority > 60 ? 'expert educator' : brandDimensions.authority < 40 ? 'peer guide' : 'knowledgeable friend'
+    const depthDesc = brandDimensions.depth > 60 ? 'deep, philosophical' : brandDimensions.depth < 40 ? 'tactical, practical' : 'balanced depth'
+    const emotionDesc = brandDimensions.emotion > 60 ? 'highly inspirational' : brandDimensions.emotion < 40 ? 'analytical and data-driven' : 'balanced emotion'
+    const riskDesc = brandDimensions.risk > 60 ? 'controversial and edgy' : brandDimensions.risk < 40 ? 'safe and approachable' : 'moderately bold'
+
+    const prompt = `Search the web for trending ${niche} content from the last 7-10 days. Find what's performing well right now.
+
+**My Brand Voice:**
+- Tone: ${toneDesc}
+- Authority: ${authorityDesc}
+- Depth: ${depthDesc}
+- Emotion: ${emotionDesc}
+- Risk: ${riskDesc}
+
+**Your Task:**
+Identify the top 3 viral trends in my niche and for EACH trend provide:
+
+1. **What's Trending** - Specific examples (titles, creators if possible, view counts if available)
+2. **Why It's Working** - Engagement psychology (hooks, format, timing, audience need)
+3. **My Brand Adaptation** - How I can authentically adapt this trend to MY voice dimensions
+4. **Ready-to-Use Idea** - A specific, actionable video concept that combines this trend with my brand
+
+**Output Format (use markdown):**
+
+# 🔥 Trending content in ${niche} Right Now
+
+## Trend #1: [Trend Name]
+
+### 📊 What's Trending
+[Specific examples with details]
+
+### 🧠 Why It's Working
+[Engagement psychology - be specific about hooks, format, emotional triggers]
+
+### 🎨 Your Brand Adaptation
+[How to adapt this to your ${toneDesc}, ${authorityDesc} voice]
+
+### 💡 Ready-to-Use Video Idea
+**Title:** [Specific title]
+**Hook:** [First 5 seconds]
+**Format:** [Video structure]
+**Key Points:**
+- [Point 1]
+- [Point 2]
+- [Point 3]
+
+---
+
+[Repeat for Trends #2 and #3]
+
+---
+
+## 🎯 Quick Action Plan
+
+Pick ONE trend for each topic that is highest ROI to create this week:
+- **Best for beginners:** [Which trend and why]
+- **Highest viral potential:** [Which trend and why]
+- **Most authentic to your brand:** [Which trend and why]
+
+**CRITICAL REQUIREMENTS:**
+- Use REAL, CURRENT examples from web search (with specifics like views, creators)
+- Be ACTIONABLE - I should be able to start filming today
+- Stay AUTHENTIC - adaptations must fit my brand dimensions
+- Focus on PROVEN viral patterns - not speculation`
+
+    const response = await client.addMessage(threadId, {
+      content: prompt,
+      memory: 'Auto',
+      llm_provider: selectModelForTask('strategic_ranking').provider,
+      model_name: selectModelForTask('strategic_ranking').model,
+      web_search: 'On'  // Enable web search for real-time trends
+    })
+
+    console.log('✅ Trend analysis complete')
+
+    return response.content || 'Unable to analyze trends. Please try again.'
+  } catch (error) {
+    console.error('Failed to analyze trends:', error)
+    throw new Error('Could not analyze trending content')
+  }
+}

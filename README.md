@@ -18,9 +18,11 @@ TrueU solves the creator's challenge: **staying authentic while growing your aud
 
 1. **5-Dimension Brand Identity** - Define your voice across Tone, Authority, Depth, Emotion, and Risk
 2. **Video Analysis with Twelve Labs** - Upload videos to get retention timelines, brand alignment scores, and actionable feedback
-3. **AI Content Generation** - Get personalized content ideas that match your brand
-4. **Target Audience Insights** - Understand who you're creating for
-5. **Brand Coherence Tracking** - Monitor how consistently your content aligns with your identity
+3. **Viral Trend Analyzer** - Discover trending content in your niche and get brand-aligned adaptations with web search
+4. **Video Remix** - Transform viral videos into scripts that match your authentic voice while maintaining viral potential
+5. **AI Content Generation** - Get personalized content ideas that match your brand
+6. **Target Audience Insights** - Understand who you're creating for
+7. **Brand Coherence Tracking** - Monitor how consistently your content aligns with your identity
 
 ---
 
@@ -40,6 +42,14 @@ Upload videos to get:
 - **Brand Alignment Score** - How well videos match your identity across all 5 dimensions
 - **Actionable Feedback** - Specific strengths and improvements with timestamps
 - **Content Insights** - Auto-generated titles, topics, hashtags, and summaries
+- **Video Remix** - Transform any video into a brand-aligned script ready to film
+
+### 🔥 Viral Trend Analyzer
+Real-time trend discovery with web search:
+- **What's Trending** - Current viral content in your niche with view counts and creators
+- **Why It Works** - Engagement psychology behind trending formats
+- **Brand Adaptation** - How to authentically adapt trends to your voice
+- **Ready-to-Use Ideas** - Specific video concepts combining trends with your identity
 
 ### 🤖 AI Content Generation
 - Chat interface for content brainstorming
@@ -302,16 +312,18 @@ Design system: Pink-purple gradient brand, glassmorphism UI, responsive layout
 - ✅ Video upload & analysis with Twelve Labs
 - ✅ Retention timeline predictions
 - ✅ Brand alignment scoring with Grok-3
+- ✅ Video remix feature (maintain virality while staying on-brand)
+- ✅ Viral trend analyzer with web search
 - ✅ AI content ideas generation
 - ✅ Target audience insights
 - ✅ Brand coherence tracking
 
 ### Next
-- Video remix feature (maintain virality while staying on-brand)
 - Social profile content analysis
 - Content performance tracking
 - Multi-profile support
 - Competitor insights
+- Content calendar generation
 
 ---
 

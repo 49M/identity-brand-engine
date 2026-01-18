@@ -133,8 +133,7 @@ export async function POST(request: NextRequest) {
 
     await writeMemory('content', {
       ...contentMemory,
-      videoAnalyses: [...(contentMemory.videoAnalyses || []), videoAnalysis],
-      lastUpdated: new Date().toISOString()
+      videoAnalyses: [...(contentMemory.videoAnalyses || []), videoAnalysis]
     })
 
     console.log(`✅ Video analysis complete: ${analysisResult.videoId}`)

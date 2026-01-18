@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
 
     // Send message to Backboard and get AI response
     console.log('🤖 Sending message to Backboard AI (OpenAI GPT-4o)...')
-    const aiResponse = await sendIdeasMessage(ideasThreadId, message)
+    const aiResponse = await sendIdeasMessage(ideasThreadId, message, profileUrl)
 
     console.log('✅ Content ideas generated successfully')
 

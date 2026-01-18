@@ -5,6 +5,7 @@ import {
   getTaskStatus
 } from '@/lib/ai/twelvelabs'
 import { analyzeVideoBrandAlignment } from '@/lib/ai/backboard-initialize'
+import { analyzeRetentionTimeline } from '@/lib/ai/retention-analyzer'
 import { readMemory, writeMemory } from '@/lib/memory'
 
 /**
@@ -80,6 +81,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Analyze retention timeline using chapters and highlights
+    console.log('📊 Analyzing retention timeline...')
+    const retentionTimeline = analyzeRetentionTimeline(
+      analysisResult.chapters as Array<{ start?: number; end?: number; chapterTitle?: string; headline?: string; chapterSummary?: string; summary?: string }> | undefined,
+      analysisResult.highlights as Array<{ start?: number; end?: number; highlightTitle?: string; title?: string; highlightSummary?: string; summary?: string }> | undefined
+    )
+    console.log(`✅ Generated ${retentionTimeline.length} retention segments`)
+
     // Analyze brand alignment using Backboard.io with Grok-3
     let brandAlignment
     try {
@@ -117,6 +126,7 @@ export async function POST(request: NextRequest) {
       summary: analysisResult.summary,
       chapters: analysisResult.chapters,
       highlights: analysisResult.highlights,
+      retentionTimeline,
       brandAlignment,
       analyzedAt: new Date().toISOString()
     }
@@ -139,6 +149,7 @@ export async function POST(request: NextRequest) {
         summary: analysisResult.summary,
         chapters: analysisResult.chapters,
         highlights: analysisResult.highlights,
+        retentionTimeline,
         brandAlignment
       }
     })

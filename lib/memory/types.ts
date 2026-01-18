@@ -87,6 +87,14 @@ export interface PublishedContent {
   }
 }
 
+export interface RetentionSegment {
+  start: number
+  end: number
+  score: number
+  label: string
+  reason: string
+}
+
 export interface VideoAnalysis {
   id: string
   taskId: string
@@ -98,6 +106,7 @@ export interface VideoAnalysis {
   summary: string
   chapters?: unknown[]
   highlights?: unknown[]
+  retentionTimeline?: RetentionSegment[]
   brandAlignment?: {
     overallScore: number
     dimensionScores: {

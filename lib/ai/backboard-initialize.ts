@@ -654,17 +654,20 @@ export async function analyzeTrendingContent(
     const emotionDesc = brandDimensions.emotion > 60 ? 'highly inspirational' : brandDimensions.emotion < 40 ? 'analytical and data-driven' : 'balanced emotion'
     const riskDesc = brandDimensions.risk > 60 ? 'controversial and edgy' : brandDimensions.risk < 40 ? 'safe and approachable' : 'moderately bold'
 
-    const prompt = `Search the web for trending ${niche} content from the last 7-10 days. Find what's performing well right now.
+    const prompt = `You are analyzing trending content for a ${niche} creator. Use web search to find what's performing well RIGHT NOW in the last 7-10 days.
 
-**My Brand Voice:**
-- Tone: ${toneDesc}
-- Authority: ${authorityDesc}
-- Depth: ${depthDesc}
-- Emotion: ${emotionDesc}
-- Risk: ${riskDesc}
+**CRITICAL CONTEXT - This Creator's Brand Identity:**
+I am a ${niche} creator with these specific brand dimensions:
+- **Tone**: ${toneDesc} (${brandDimensions.tone}/100 scale)
+- **Authority**: ${authorityDesc} (${brandDimensions.authority}/100 scale)
+- **Depth**: ${depthDesc} (${brandDimensions.depth}/100 scale)
+- **Emotion**: ${emotionDesc} (${brandDimensions.emotion}/100 scale)
+- **Risk**: ${riskDesc} (${brandDimensions.risk}/100 scale)
+
+ALL trend adaptations MUST match these exact dimensions. Do not give generic advice - tailor everything to MY specific voice.
 
 **Your Task:**
-Identify the top 3 viral trends in my niche and for EACH trend provide:
+Search the web and identify the top 3 viral trends in ${niche} content. For EACH trend provide:
 
 1. **What's Trending** - Specific examples (titles, creators if possible, view counts if available)
 2. **Why It's Working** - Engagement psychology (hooks, format, timing, audience need)
@@ -714,11 +717,13 @@ Pick ONE trend for each topic that is highest ROI to create this week:
 - Stay AUTHENTIC - adaptations must fit my brand dimensions
 - Focus on PROVEN viral patterns - not speculation`
 
+    // Note: We explicitly include brand dimensions in the prompt rather than relying on memory
+    // This ensures the first call works properly without needing a "warm-up"
     const response = await client.addMessage(threadId, {
       content: prompt,
-      memory: 'Auto',
-      llm_provider: selectModelForTask('strategic_ranking').provider,
-      model_name: selectModelForTask('strategic_ranking').model,
+      memory: 'Off',  // Turned off since we're providing explicit context in the prompt
+      llm_provider: selectModelForTask('content_strategy').provider,
+      model_name: selectModelForTask('content_strategy').model,
       web_search: 'On'  // Enable web search for real-time trends
     })
 

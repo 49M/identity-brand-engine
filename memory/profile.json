@@ -6,54 +6,43 @@
       "Business"
     ],
     "goals": [
-      "grow personal brand",
-      "increase engagement",
-      "monetize content",
-      "build community",
-      "buy viewer companies"
+      "to be as entertaining as possible",
+      "become famous"
     ]
   },
   "audience": {
     "targetViewer": {
-      "ageRange": "22-35",
+      "ageRange": "30-70",
       "interests": [
-        "technology",
-        "fitness",
-        "business",
-        "marketing",
-        "sales",
-        "operations",
-        "strategy"
+        "acting",
+        "movies",
+        "shows",
+        "hollywood"
       ],
       "painPoints": [
-        "lack of time",
-        "information overload",
-        "staying motivated",
-        "finding quality resources"
+        "bored without good things to watch",
+        "bad acting",
+        "need for personable celebrities"
       ]
     },
     "platforms": [
-      "YouTube",
-      "Twitter/X",
-      "LinkedIn",
-      "TikTok",
-      "Instagram"
+      "Instagram",
+      "YouTube"
     ],
-    "aiGeneratedSummary": "Based on the creator profile document, here's Alex Hormozi's ideal target audience summary:\n\n## **Target Audience Profile**\n\n### **Demographics**\n- **Age Range:** 22-35 years old\n- **Profile:** Young professionals and entrepreneurs in their growth phase\n\n### **Core Interests**\n- Technology\n- Fitness\n- Business strategy\n- Marketing & Sales\n- Operations\n- Strategic planning\n\n### **Platform Preferences**\nAlex should focus content distribution across:\n- **YouTube** (primary long-form content)\n- **Twitter/X** (real-time engagement)\n- **LinkedIn** (professional networking)\n- **TikTok** (short-form viral content)\n- **Instagram** (visual storytelling)\n\n### **Content Needs & Strategy Application**\n- **Format:** Fast-paced, aggressive, intense delivery (25-second videos)\n- **Content Type:** Business strategies and tactical how-to content\n- **Frequency:** Daily posting for consistent engagement\n- **Tone:** Practical, balanced, actionable advice\n- **Focus:** Business education with immediate applicability\n\n### **Content Strategy Recommendations**\n1. Create bite-sized tactical business advice\n2. Focus on actionable strategies over theory\n3. Maintain high-energy, no-fluff delivery\n4. Target pain points of scaling businesses and personal growth\n5. Leverage the Educator-Expert archetype to build authority while teaching\n\nThis audience seeks quick, practical business insights they can implement immediately to grow their ventures and personal brands."
+    "aiGeneratedSummary": "Based on the significant profile changes you've made, here's an updated target audience summary that reflects your evolution from business content to entertainment focus:\n\n## Updated Target Audience Summary\n\n**Demographics:**\n- Age: 30-70 years old (expanded range to capture broader entertainment audience)\n- Primary focus: Adults seeking entertainment and celebrity content\n\n**Core Interests:**\n- Acting and movies\n- TV shows and streaming content\n- Hollywood and celebrity culture\n- Entertainment industry insights\n\n**Pain Points:**\n- Boredom from lack of quality entertainment content\n- Frustration with poor acting quality\n- Desire for more personable, relatable celebrities\n- Need for engaging entertainment commentary\n\n**Platform Strategy:**\n- **Instagram**: Primary platform for entertainment content, celebrity insights, behind-the-scenes content\n- **YouTube**: Secondary platform for longer-form entertainment analysis and movie/show reviews\n\n**Content Needs:**\n- Entertainment-focused content with personality\n- Celebrity insights and industry commentary\n- Movie/show recommendations and reviews\n- Behind-the-scenes entertainment industry content\n- Monthly high-quality posts (1200s video length) rather than daily content\n\n**Brand Positioning:**\nAs a Peer-Guide archetype, your audience wants someone who feels like a knowledgeable friend in the entertainment space - someone who can guide them to great content while being entertaining themselves.\n\nThis represents a complete pivot from your previous business-focused audience to an entertainment-oriented community seeking engaging, celebrity-style content with industry insights."
   },
   "constraints": {
-    "postingFrequency": "daily",
-    "videoLengthSeconds": 25,
+    "postingFrequency": "monthly",
+    "videoLengthSeconds": 1200,
     "tone": [
-      "aggressive",
-      "intense"
+      "balanced"
     ]
   },
   "rawDimensions": {
-    "tone": 30,
-    "authority": 100,
-    "depth": 35,
-    "emotion": 40,
-    "risk": 75
+    "tone": 44,
+    "authority": 52,
+    "depth": 25,
+    "emotion": 75,
+    "risk": 35
   }
 }

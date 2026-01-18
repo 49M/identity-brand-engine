@@ -18,7 +18,7 @@ type MemoryTypeMap = {
 
 // Get default for each file type
 const getDefault = <T extends MemoryFile>(file: T): MemoryTypeMap[T] => {
-  const defaults: Record<MemoryFile, any> = {
+  const defaults: Record<MemoryFile, MetaMemory | ProfileMemory | BrandMemory | ContentMemory | InsightsMemory> = {
     meta: defaultMeta,
     profile: defaultProfile,
     brand: defaultBrand,
@@ -41,7 +41,7 @@ export async function readMemory<T extends MemoryFile>(file: T): Promise<MemoryT
   try {
     const data = await fs.readFile(filePath, 'utf-8')
     return JSON.parse(data) as MemoryTypeMap[T]
-  } catch (error) {
+  } catch {
     // If file doesn't exist or is corrupted, return default
     console.warn(`Memory file ${file}.json not found or corrupted, using defaults`)
     return getDefault(file)

@@ -32,6 +32,13 @@ export const defaultProfile: ProfileMemory = {
     postingFrequency: 'daily',
     videoLengthSeconds: 30,
     tone: []
+  },
+  rawDimensions: {
+    tone: 50,
+    authority: 50,
+    depth: 50,
+    emotion: 50,
+    risk: 50
   }
 }
 

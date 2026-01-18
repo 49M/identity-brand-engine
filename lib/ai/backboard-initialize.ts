@@ -204,3 +204,40 @@ export async function getInitialTargetAudience(threadId: string): Promise<string
     throw new Error('Could not get initial target audience');
   }
 }
+
+/**
+ * Update target audience based on profile changes
+ */
+export async function updateTargetAudience(
+  threadId: string,
+  changes: string[]
+): Promise<string> {
+  const client = getBackboardClient();
+
+  try {
+    const changesText = changes.length > 0
+      ? `The following profile changes have been made:\n${changes.map(c => `- ${c}`).join('\n')}`
+      : 'The creator profile has been updated.'
+
+    const response = await client.addMessage(threadId, {
+      content: `${changesText}
+
+Based on these changes to the creator's profile, please review and update the target audience summary if needed. Consider whether these changes affect:
+- Demographics or age range
+- Interests and pain points
+- Platform strategy
+- Content needs and preferences
+
+If the changes significantly impact the target audience, provide an updated summary. If the changes don't materially affect the target audience, you can keep the previous summary with minor adjustments or confirm it remains accurate. Keep it concise and actionable.`,
+      memory: 'Auto',
+      llm_provider: selectModelForTask('identity_reasoning').provider,
+      model_name: selectModelForTask('identity_reasoning').model,
+      web_search: 'Auto'
+    })
+
+    return response.content || 'Unable to update target audience summary'
+  } catch (err) {
+    console.error('Failed to update target audience:', err);
+    throw new Error('Could not update target audience');
+  }
+}

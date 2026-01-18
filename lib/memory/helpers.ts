@@ -80,7 +80,7 @@ export async function isOnboardingComplete(): Promise<boolean> {
   try {
     const meta = await readMemory('meta') as MetaMemory
     return meta.onboardingComplete || false
-  } catch (error) {
+  } catch {
     return false
   }
 }

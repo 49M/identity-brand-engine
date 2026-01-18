@@ -1,6 +1,6 @@
 {
   "persona": {
-    "archetype": "Educator-Expert",
+    "archetype": "Peer-Guide",
     "coreThemes": [
       "Business",
       "tactical",
@@ -9,13 +9,12 @@
     ],
     "voice": {
       "style": [
-        "aggressive",
-        "intense"
+        "balanced"
       ],
-      "pacing": "fast",
+      "pacing": "moderate",
       "emotionalRange": [
-        "balanced",
-        "practical"
+        "motivational",
+        "inspiring"
       ]
     }
   },
@@ -24,7 +23,9 @@
       "Business",
       "tactical"
     ],
-    "whatYouAvoid": []
+    "whatYouAvoid": [
+      "controversial topics"
+    ]
   },
   "confidenceScore": 0.5
 }

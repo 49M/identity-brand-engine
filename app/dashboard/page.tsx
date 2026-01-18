@@ -169,6 +169,11 @@ export default function Dashboard() {
         setIdentityDimensions(newDimensions)
         setCurrentProfile(newProfile)
         setActivePanel(null)
+        setTargetAudience('')
+        // Reload target audience analysis
+        const audienceResponse = await fetch('/api/target-audience')
+        const audienceData = await audienceResponse.json()
+        setTargetAudience(audienceData.targetAudience)
       }
     } catch (error) {
       console.error('Error saving identity:', error)

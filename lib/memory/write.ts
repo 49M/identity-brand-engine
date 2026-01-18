@@ -24,21 +24,21 @@ interface WriteOptions {
 /**
  * Deep merge two objects
  */
-function deepMerge<T extends Record<string, any>>(target: T, source: Partial<T>): T {
+function deepMerge<T>(target: T, source: Partial<T>): T {
   const output = { ...target }
 
   for (const key in source) {
     if (source.hasOwnProperty(key)) {
       const sourceValue = source[key]
-      const targetValue = output[key]
+      const targetValue = output[key as keyof T]
 
       if (sourceValue && typeof sourceValue === 'object' && !Array.isArray(sourceValue)) {
-        output[key] = deepMerge(
-          targetValue && typeof targetValue === 'object' ? targetValue : {},
+        output[key as keyof T] = deepMerge(
+          targetValue && typeof targetValue === 'object' ? targetValue : {} as T[keyof T],
           sourceValue
-        ) as T[Extract<keyof T, string>]
+        ) as T[keyof T]
       } else {
-        output[key] = sourceValue as T[Extract<keyof T, string>]
+        output[key as keyof T] = sourceValue as T[keyof T]
       }
     }
   }

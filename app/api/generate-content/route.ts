@@ -19,7 +19,7 @@ import { getOrCreateIdeasThread, sendIdeasMessage } from '@/lib/ai/backboard-ini
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { message } = body
+    const { message, profileUrl } = body
 
     if (!message || typeof message !== 'string' || !message.trim()) {
       return NextResponse.json(

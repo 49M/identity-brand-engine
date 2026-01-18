@@ -272,13 +272,14 @@ export async function getOrCreateIdeasThread(
  */
 export async function sendIdeasMessage(
   threadId: string,
-  message: string
+  message: string,
+  profileUrl?: string
 ): Promise<string> {
   const client = getBackboardClient()
 
   try {
     const response = await client.addMessage(threadId, {
-      content: message,
+      content: `${profileUrl ? `Reference the profile URL: ${profileUrl}` : ''}\n\nMessage: ${message}`,
       memory: 'Auto',
       llm_provider: selectModelForTask('content_generation').provider,
       model_name: selectModelForTask('content_generation').model,

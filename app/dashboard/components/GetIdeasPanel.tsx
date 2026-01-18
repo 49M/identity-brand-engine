@@ -123,7 +123,8 @@ export default function GetIdeasPanel({ onClose }: GetIdeasPanelProps) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          message: newMessage.content
+          message: newMessage.content,
+          profileUrl: analysisProfile ? profileUrl : null,
         })
       })
 

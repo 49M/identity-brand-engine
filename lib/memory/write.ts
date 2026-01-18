@@ -1,12 +1,9 @@
 // Memory Write API
 
-import { promises as fs } from 'fs'
-import path from 'path'
 import { MemoryFile, MetaMemory, ProfileMemory, BrandMemory, ContentMemory, InsightsMemory } from './types'
 import { readMemory } from './read'
 import { defaultMeta, defaultProfile, defaultBrand, defaultContent, defaultInsights } from './defaults'
-
-const MEMORY_DIR = path.join(process.cwd(), 'memory')
+import { dbWrite, dbExists } from './db-adapter'
 
 // Type mapping for memory files
 type MemoryTypeMap = {
@@ -60,11 +57,6 @@ export async function writeMemory<T extends MemoryFile>(
   patch: Partial<MemoryTypeMap[T]>,
   options: WriteOptions = { merge: true }
 ): Promise<void> {
-  const filePath = path.join(MEMORY_DIR, `${file}.json`)
-
-  // Ensure memory directory exists
-  await fs.mkdir(MEMORY_DIR, { recursive: true })
-
   let data: MemoryTypeMap[T]
 
   if (options.merge) {
@@ -76,15 +68,14 @@ export async function writeMemory<T extends MemoryFile>(
     data = patch as MemoryTypeMap[T]
   }
 
-  // Write to file
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8')
+  // Write to database
+  await dbWrite(file, data)
 
   // Update meta.lastUpdated (unless we're writing to meta itself)
   if (file !== 'meta') {
     const meta = await readMemory('meta')
     meta.lastUpdated = new Date().toISOString()
-    const metaPath = path.join(MEMORY_DIR, 'meta.json')
-    await fs.writeFile(metaPath, JSON.stringify(meta, null, 2), 'utf-8')
+    await dbWrite('meta', meta)
   }
 }
 
@@ -93,21 +84,16 @@ export async function writeMemory<T extends MemoryFile>(
  * Only creates files that don't exist
  */
 export async function initializeMemory(): Promise<void> {
-  await fs.mkdir(MEMORY_DIR, { recursive: true })
-
   const files: MemoryFile[] = ['meta', 'profile', 'brand', 'content', 'insights']
 
   for (const file of files) {
-    const filePath = path.join(MEMORY_DIR, `${file}.json`)
+    const exists = await dbExists(file)
 
-    try {
-      await fs.access(filePath)
-      // File exists, skip
-    } catch {
+    if (!exists) {
       // File doesn't exist, create it with defaults
       const defaultData = await readMemory(file)
-      await fs.writeFile(filePath, JSON.stringify(defaultData, null, 2), 'utf-8')
-      console.log(`Created ${file}.json with defaults`)
+      await dbWrite(file, defaultData)
+      console.log(`Created ${file} with defaults`)
     }
   }
 }

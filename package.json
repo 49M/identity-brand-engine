@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
+    "@vercel/edge-config": "^1.4.3",
     "axios": "^1.13.2",
     "backboard-sdk": "^1.4.7",
     "clsx": "^2.1.1",
@@ -18,6 +19,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-markdown": "^10.1.0",
+    "redis": "^5.10.0",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "twelvelabs-js": "^1.1.0"

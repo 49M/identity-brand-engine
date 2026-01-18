@@ -1,8 +1,8 @@
 # TrueU 🎯
 
-**Authentic content creation powered by AI that understands your unique voice.**
+**AI-powered content creation that stays true to your voice.**
 
-TrueU is an AI-powered platform that helps content creators stay true to their authentic voice while producing high-performing content. By analyzing your brand identity across five key dimensions, TrueU provides personalized content ideas, audience insights, and strategic recommendations—all tailored to your unique creative style. Through video analysis, and content generation, TrueU has creators' backs'!
+TrueU helps content creators maintain authenticity while producing high-performing content. Define your brand identity across five dimensions, analyze videos for retention patterns and brand alignment, and get personalized content ideas—all powered by advanced AI.
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15.1-black.svg)](https://nextjs.org/)
@@ -12,61 +12,52 @@ TrueU is an AI-powered platform that helps content creators stay true to their a
 
 ## 🌟 What is TrueU?
 
-TrueU solves the creator's biggest challenge: **staying authentic while growing your audience**. Unlike generic content tools, TrueU learns your unique brand identity and ensures every piece of content resonates with both you and your audience.
+TrueU solves the creator's challenge: **staying authentic while growing your audience**. Map your unique brand identity, analyze video content for performance insights, and generate ideas that align with your voice.
 
-### The Problem
+### Core Features
 
-Content creators face constant pressure to:
-- Stay on trend while remaining authentic
-- Understand their audience deeply
-- Generate consistent content ideas
-- Maintain their unique voice across platforms
-- Balance performance with authenticity
-
-### The Solution
-
-TrueU uses AI to:
-1. **Map your brand identity** across 5 dimensions (Tone, Authority, Depth, Emotion, Risk)
-2. **Analyze your target audience** with precision
-3. **Generate personalized content ideas** that align with your voice
-4. **Track your brand evolution** over time
-5. **Provide strategic insights** from successful content
+1. **5-Dimension Brand Identity** - Define your voice across Tone, Authority, Depth, Emotion, and Risk
+2. **Video Analysis with Twelve Labs** - Upload videos to get retention timelines, brand alignment scores, and actionable feedback
+3. **AI Content Generation** - Get personalized content ideas that match your brand
+4. **Target Audience Insights** - Understand who you're creating for
+5. **Brand Coherence Tracking** - Monitor how consistently your content aligns with your identity
 
 ---
 
 ## ✨ Key Features
 
-### 🎨 5-Dimension Brand Identity System
-Define your authentic voice through:
-- **Tone**: From aggressive to calm
-- **Authority**: From peer guide to expert educator
-- **Depth**: From tactical how-tos to philosophical concepts
-- **Emotion**: From analytical to inspirational
-- **Risk**: From safe to controversial
+### 🎨 5-Dimension Brand Identity
+Define your authentic voice:
+- **Tone**: Aggressive to calm
+- **Authority**: Peer guide to expert educator
+- **Depth**: Tactical how-tos to philosophical concepts
+- **Emotion**: Analytical to inspirational
+- **Risk**: Safe to controversial
 
-### 🤖 AI-Powered Content Ideas
-- Real-time chat interface with context-aware AI
-- Content suggestions tailored to your brand
+### 📹 Video Analysis (Twelve Labs)
+Upload videos to get:
+- **Retention Timeline** - Predicted engagement patterns with color-coded segments (green/yellow/red)
+- **Brand Alignment Score** - How well videos match your identity across all 5 dimensions
+- **Actionable Feedback** - Specific strengths and improvements with timestamps
+- **Content Insights** - Auto-generated titles, topics, hashtags, and summaries
+
+### 🤖 AI Content Generation
+- Chat interface for content brainstorming
+- Ideas tailored to your brand dimensions
 - Platform-specific recommendations
-- Integration with social profile analysis
+- Powered by OpenAI GPT-4o and Claude 3.5 Sonnet
 
-### 👥 Smart Audience Insights
-- AI-generated target audience profiles
-- Automatic updates based on profile changes
-- Demographics, interests, and pain points analysis
-- Platform optimization recommendations
+### 👥 Target Audience Insights
+- AI-generated audience profiles
+- Demographics, interests, and pain points
+- Platform optimization suggestions
+- Updates automatically with profile changes
 
-### 📊 Profile Management
-- Interactive identity dashboard
-- Visual dimension sliders
-- Profile editing with live preview
-- Multi-platform support (YouTube, TikTok, Instagram, X, LinkedIn)
-
-### 💬 Conversational AI Assistant
-- Dedicated thread for content brainstorming
-- Maintains context across conversations
-- Markdown-formatted responses
-- Powered by OpenAI GPT-4o via Backboard.io
+### 📊 Brand Coherence Tracking
+- Dashboard score showing average brand alignment
+- Based on all uploaded video analyses
+- Dimension-level breakdowns
+- Empty state prompts for initial uploads
 
 ---
 
@@ -77,21 +68,21 @@ TrueU is built with modern web technologies and AI infrastructure:
 ### Tech Stack
 
 **Frontend**
-- **Next.js 15.1** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first styling
-- **React Markdown** - Rich content formatting
+- Next.js 15.1 with App Router
+- TypeScript
+- Tailwind CSS
+- React Markdown
 
-**Backend**
-- **Next.js API Routes** - Serverless API
-- **Backboard.io** - AI assistant orchestration
-- **OpenAI GPT-4o** - Content generation
-- **Claude 3.5 Sonnet** - Identity reasoning
+**AI & Video Analysis**
+- Twelve Labs (Marengo 3.0, Pegasus 1.2) - Video analysis
+- Grok-3 via X.AI - Brand alignment scoring
+- OpenAI GPT-4o - Content generation
+- Claude 3.5 Sonnet - Identity reasoning
+- Backboard.io - AI orchestration
 
-**Memory System**
+**Storage**
 - JSON-based local storage
-- Profile, Brand, Content, Insights separation
-- Adaptive memory with confidence scoring
+- Profile, Brand, Content, Insights memory files
 
 ### Architecture Highlights
 
@@ -133,51 +124,41 @@ TrueU is built with modern web technologies and AI infrastructure:
 
 ### Prerequisites
 
-- **Node.js 18+** - [Download](https://nodejs.org/)
-- **npm** or **pnpm** - Package manager
-- **Backboard.io API Key** - [Get one here](https://backboard.io)
+- Node.js 18+
+- npm or pnpm
+- API keys for:
+  - Backboard.io
+  - Twelve Labs
+  - X.AI (for Grok-3)
 
 ### Installation
 
-1. **Clone the repository**
+1. Clone the repository
    ```bash
    git clone https://github.com/yourusername/trueu.git
    cd trueu
    ```
 
-2. **Install dependencies**
+2. Install dependencies
    ```bash
    npm install
-   # or
-   pnpm install
    ```
 
-3. **Set up environment variables**
+3. Set up environment variables
 
-   Create a `.env.local` file in the root directory:
+   Create a `.env.local` file:
    ```env
-   BACKBOARD_API_KEY=your_backboard_api_key_here
+   BACKBOARD_API_KEY=your_key_here
+   TWELVE_LABS_API_KEY=your_key_here
+   XAI_API_KEY=your_key_here
    ```
 
-4. **Initialize the memory system**
-
-   The memory system will auto-initialize on first run. Files will be created in `./memory/`:
-   - `meta.json` - System metadata
-   - `profile.json` - Creator profile
-   - `brand.json` - Brand persona
-   - `content.json` - Content ideas
-   - `insights.json` - Analytics data
-
-5. **Run the development server**
+4. Run the development server
    ```bash
    npm run dev
-   # or
-   pnpm dev
    ```
 
-6. **Open your browser**
-
-   Navigate to [http://localhost:3000](http://localhost:3000)
+5. Open [http://localhost:3000](http://localhost:3000)
 
 ---
 
@@ -185,37 +166,39 @@ TrueU is built with modern web technologies and AI infrastructure:
 
 ### Creating Your Profile
 
-1. **Start Onboarding** - Click "Get Started" on the landing page
-2. **Enter Basic Info** - Name and content niche
-3. **Set Brand Dimensions** - Adjust 5 sliders to match your voice
-4. **Define Your Audience** - Age, interests, pain points
-5. **Choose Platforms** - Select where you create content
-6. **Generate Target Audience** - AI analyzes and creates audience profile
+1. Click "Get Started" on the landing page
+2. Enter your name and content niche
+3. Adjust 5 brand dimension sliders
+4. Define your target audience
+5. Select your platforms
+6. AI generates your target audience profile
+
+### Analyzing Videos
+
+1. Click "Upload Video" from the dashboard
+2. Drag and drop or select a video file (up to 2GB)
+3. Wait for analysis (includes Twelve Labs processing + Grok-3 brand alignment)
+4. Review:
+   - Retention timeline with color-coded engagement predictions
+   - Brand alignment score with dimension breakdowns
+   - Suggested title, topics, and hashtags
+   - Actionable feedback with timestamps
 
 ### Getting Content Ideas
 
-1. **Open Dashboard** - Navigate to your dashboard
-2. **Click "Get Ideas"** - Opens AI chat interface
-3. **Ask for Ideas** - Type questions like:
+1. Click "Get Ideas" from dashboard
+2. Ask questions like:
    - "Give me 5 video ideas for this week"
    - "What's trending in my niche?"
-   - "Content ideas for YouTube Shorts"
-4. **Review Suggestions** - AI provides markdown-formatted ideas
-5. **Save & Implement** - Copy ideas to your workflow
+   - "How can I improve my hook?"
+3. Review AI-generated suggestions tailored to your brand
 
-### Editing Your Identity
+### Monitoring Brand Coherence
 
-1. **Click "Edit Identity"** - From dashboard
-2. **Adjust Dimensions** - Fine-tune your brand voice
-3. **Update Profile Details** - Modify goals, audience, constraints
-4. **Save Changes** - AI automatically updates target audience
-
-### Connecting Social Profiles
-
-1. **Get Ideas Panel** - Click "Connect Profile URL"
-2. **Select Platform** - YouTube, TikTok, Instagram, X, or LinkedIn
-3. **Paste URL** - Add your profile link
-4. **Analyze** - AI extracts insights (coming soon)
+The dashboard shows your brand coherence score:
+- Average brand alignment across all uploaded videos
+- Dimension-level breakdowns
+- Updates automatically after each video upload
 
 ---
 
@@ -224,35 +207,30 @@ TrueU is built with modern web technologies and AI infrastructure:
 ```
 trueu/
 ├── app/
-│   ├── api/                  # API routes
-│   │   ├── profile/          # Profile management
-│   │   ├── generate-content/ # Content ideas generation
-│   │   ├── update-identity/  # Identity updates
-│   │   └── target-audience/  # Audience insights
-│   ├── dashboard/            # Main dashboard
-│   │   └── components/       # Dashboard components
+│   ├── api/
+│   │   ├── profile/           # Profile management
+│   │   ├── video/             # Video upload & analysis
+│   │   ├── brand-coherence/   # Brand scoring
+│   │   ├── generate-content/  # Content ideas
+│   │   └── update-identity/   # Identity updates
+│   ├── dashboard/
+│   │   └── components/
+│   │       ├── UploadVideoPanel.tsx
 │   │       ├── GetIdeasPanel.tsx
-│   │       ├── EditIdentityPanel.tsx
-│   │       └── ...
-│   ├── create-profile/       # Onboarding flow
-│   └── page.tsx              # Landing page
+│   │       └── EditIdentityPanel.tsx
+│   ├── create-profile/        # Onboarding
+│   └── page.tsx               # Landing
 ├── lib/
-│   ├── ai/                   # AI integration
+│   ├── ai/
 │   │   ├── backboard-initialize.ts
+│   │   ├── twelvelabs.ts
+│   │   ├── retention-analyzer.ts
 │   │   └── model-router.ts
-│   └── memory/               # Memory system
+│   └── memory/
 │       ├── types.ts
 │       ├── read.ts
-│       ├── write.ts
-│       ├── helpers.ts
-│       └── defaults.ts
-├── memory/                   # JSON data storage (gitignored)
-│   ├── meta.json
-│   ├── profile.json
-│   ├── brand.json
-│   ├── content.json
-│   └── insights.json
-└── public/                   # Static assets
+│       └── write.ts
+└── memory/                    # JSON storage (gitignored)
 ```
 
 ---
@@ -289,84 +267,64 @@ npx tsc --noEmit
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `BACKBOARD_API_KEY` | Backboard.io API key for AI assistant | Yes |
-| `NODE_ENV` | Environment (development/production) | Auto-set |
+| `BACKBOARD_API_KEY` | Backboard.io API key | Yes |
+| `TWELVE_LABS_API_KEY` | Twelve Labs API key | Yes |
+| `XAI_API_KEY` | X.AI API key for Grok-3 | Yes |
 
 ---
 
 ## 🎨 Design Philosophy
 
-TrueU follows these core principles:
+Core principles:
 
 1. **Authenticity First** - Never compromise the creator's voice
-2. **Privacy by Design** - Local-first data storage
-3. **AI as Amplifier** - Enhance, don't replace, human creativity
-4. **Progressive Disclosure** - Simple onboarding, powerful features
-5. **Beautiful by Default** - Polished UI with attention to detail
+2. **Local-First Storage** - Your data stays on your machine
+3. **AI as Amplifier** - Enhance human creativity
+4. **Actionable Insights** - Specific feedback, not generic advice
 
-### Design System
-
-- **Colors**: Pink-purple gradient brand
-- **Typography**: Inter font family
-- **Components**: Glassmorphism with subtle animations
-- **Responsive**: Mobile-first approach
+Design system: Pink-purple gradient brand, glassmorphism UI, responsive layout
 
 ---
 
 ## 🔒 Privacy & Data
 
-TrueU takes privacy seriously:
-
-- **Local Storage** - All profile data stored locally as JSON files
-- **No Cloud Sync** - Your data never leaves your machine
-- **API Calls** - Only sent to Backboard.io for AI processing
-- **No Tracking** - Zero analytics or user tracking
-- **Open Source** - Full transparency into data handling
+- All profile data stored locally as JSON files
+- No cloud sync - data stays on your machine
+- API calls only for AI processing (Backboard.io, Twelve Labs, X.AI)
+- No analytics or user tracking
 
 ---
 
 ## 🚧 Roadmap
 
-### v1.0 (Current)
-- ✅ Profile creation & onboarding
+### Current (v1.0)
 - ✅ 5-dimension brand identity
+- ✅ Video upload & analysis with Twelve Labs
+- ✅ Retention timeline predictions
+- ✅ Brand alignment scoring with Grok-3
 - ✅ AI content ideas generation
-- ✅ Target audience analysis
-- ✅ Identity editing
-- ✅ Social profile URL validation
+- ✅ Target audience insights
+- ✅ Brand coherence tracking
 
-### v1.1 (Next)
-- 🔄 Social profile content analysis
-- 🔄 Content performance tracking
-- 🔄 Multi-profile support
-- 🔄 Export capabilities
-
-### v2.0 (Future)
-- 📋 Video upload & analysis
-- 📋 Competitor insights
-- 📋 Content calendar
-- 📋 Team collaboration
-- 📋 API access
+### Next
+- Video remix feature (maintain virality while staying on-brand)
+- Social profile content analysis
+- Content performance tracking
+- Multi-profile support
+- Competitor insights
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Here's how you can help:
+Contributions welcome:
 
-1. **Fork the repository**
-2. **Create a feature branch** (`git checkout -b feature/AmazingFeature`)
-3. **Commit your changes** (`git commit -m 'Add some AmazingFeature'`)
-4. **Push to the branch** (`git push origin feature/AmazingFeature`)
-5. **Open a Pull Request**
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/NewFeature`)
+3. Commit your changes
+4. Open a Pull Request
 
-### Contribution Guidelines
-
-- Follow TypeScript best practices
-- Write meaningful commit messages
-- Add tests for new features
-- Update documentation
-- Ensure `npm run lint` passes
+Guidelines: Follow TypeScript best practices, write meaningful commits, ensure `npm run lint` passes
 
 ---
 
@@ -378,24 +336,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **Backboard.io** - AI assistant orchestration
-- **OpenAI** - GPT-4o model
-- **Anthropic** - Claude 3.5 Sonnet
-- **Vercel** - Deployment platform
-- **Next.js Team** - Amazing framework
+- Backboard.io - AI orchestration
+- Twelve Labs - Video analysis
+- X.AI - Grok-3 model
+- OpenAI - GPT-4o
+- Anthropic - Claude 3.5 Sonnet
+- Vercel - Deployment
 
 ---
-
-## 📞 Support
-
-- **Documentation**: [docs.trueu.ai](https://docs.trueu.ai) (coming soon)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/trueu/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/trueu/discussions)
-- **Email**: support@trueu.ai
-
----
-
-## 🌟 Star History
 
 If you find TrueU helpful, please consider giving it a star ⭐
 

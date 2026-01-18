@@ -224,10 +224,68 @@ export async function waitForTaskCompletion(
 }
 
 /**
+ * Generate chapters (key moments breakdown) from a video
+ * Provides timestamps and descriptions of major sections
+ */
+export async function generateVideoChapters(videoId: string) {
+  const client = getTwelveLabsClient()
+
+  try {
+    console.log(`📚 Generating chapters for video: ${videoId}`)
+
+    const result = await client.summarize({
+      videoId,
+      type: 'chapter'
+    })
+
+    console.log(`✅ Chapters generated successfully`)
+
+    // Type guard for chapter result
+    if ('summarizeType' in result && result.summarizeType === 'chapter') {
+      return result.chapters || []
+    }
+
+    return []
+  } catch (error) {
+    console.error('Failed to generate video chapters:', error)
+    return [] // Return empty array instead of throwing to allow graceful degradation
+  }
+}
+
+/**
+ * Generate highlights (key moments) from a video
+ * Identifies the most important parts of the video
+ */
+export async function generateVideoHighlights(videoId: string) {
+  const client = getTwelveLabsClient()
+
+  try {
+    console.log(`⭐ Generating highlights for video: ${videoId}`)
+
+    const result = await client.summarize({
+      videoId,
+      type: 'highlight'
+    })
+
+    console.log(`✅ Highlights generated successfully`)
+
+    // Type guard for highlight result
+    if ('summarizeType' in result && result.summarizeType === 'highlight') {
+      return result.highlights || []
+    }
+
+    return []
+  } catch (error) {
+    console.error('Failed to generate video highlights:', error)
+    return [] // Return empty array instead of throwing
+  }
+}
+
+/**
  * Complete video analysis workflow:
  * 1. Upload video
  * 2. Wait for indexing to complete
- * 3. Generate gist and summary
+ * 3. Generate comprehensive insights (gist, summary, chapters, highlights)
  */
 export async function analyzeVideo(
   videoFile: File | Buffer | Blob,
@@ -244,11 +302,13 @@ export async function analyzeVideo(
     if (onProgress) onProgress('indexing')
     const videoId = await waitForTaskCompletion(task.id!, onProgress)
 
-    // Step 3: Generate insights
+    // Step 3: Generate comprehensive insights in parallel
     if (onProgress) onProgress('analyzing')
-    const [gist, summary] = await Promise.all([
+    const [gist, summary, chapters, highlights] = await Promise.all([
       generateVideoGist(videoId),
-      generateVideoSummary(videoId)
+      generateVideoSummary(videoId),
+      generateVideoChapters(videoId),
+      generateVideoHighlights(videoId)
     ])
 
     if (onProgress) onProgress('complete')
@@ -259,7 +319,9 @@ export async function analyzeVideo(
       title: gist.title,
       topics: gist.topics,
       hashtags: gist.hashtags,
-      summary
+      summary,
+      chapters,
+      highlights
     }
   } catch (error) {
     console.error('Video analysis failed:', error)

@@ -8,12 +8,29 @@ interface UploadVideoPanelProps {
   onClose: () => void
 }
 
+// TODO: implement a remix feature which allows the user to remix the original content in a way which maintains virality but is catered uniquely to them.
+
 interface VideoAnalysis {
   videoId: string
   title: string
   topics: string[]
   hashtags: string[]
   summary: string
+  chapters?: unknown[]
+  highlights?: unknown[]
+  brandAlignment?: {
+    overallScore: number
+    dimensionScores: {
+      tone: number
+      authority: number
+      depth: number
+      emotion: number
+      risk: number
+    }
+    strengths: string[]
+    improvements: string[]
+    recommendations: string
+  }
 }
 
 export default function UploadVideoPanel({ onClose }: UploadVideoPanelProps) {
@@ -67,6 +84,24 @@ export default function UploadVideoPanel({ onClose }: UploadVideoPanelProps) {
     setAnalysisError(null)
     setAnalysisProgress('Uploading video...')
 
+    // Progress stages for realistic UX
+    const progressStages = [
+      { text: 'Uploading video...', delay: 0 },
+      { text: 'Processing video...', delay: 3000 },
+      { text: 'Analyzing visual content...', delay: 7000 },
+      { text: 'Analyzing audio content...', delay: 10000 },
+      { text: 'Generating insights...', delay: 13000 },
+      { text: 'Analyzing brand alignment...', delay: 16000 },
+      { text: 'Finalizing analysis...', delay: 20000 }
+    ]
+
+    // Set up progress stage timers
+    const timers = progressStages.slice(1).map((stage) =>
+      setTimeout(() => {
+        setAnalysisProgress(stage.text)
+      }, stage.delay)
+    )
+
     try {
       // Create form data
       const formData = new FormData()
@@ -84,11 +119,18 @@ export default function UploadVideoPanel({ onClose }: UploadVideoPanelProps) {
         throw new Error(data.error || 'Failed to analyze video')
       }
 
+      // Clear any remaining timers
+      timers.forEach(timer => clearTimeout(timer))
+
       // Show results
       setAnalysisResult(data.analysis)
       setAnalysisProgress('Analysis complete!')
     } catch (error) {
       console.error('Video analysis failed:', error)
+
+      // Clear timers on error
+      timers.forEach(timer => clearTimeout(timer))
+
       setAnalysisError(error instanceof Error ? error.message : 'Failed to analyze video')
     } finally {
       setIsAnalyzing(false)
@@ -214,6 +256,102 @@ export default function UploadVideoPanel({ onClose }: UploadVideoPanelProps) {
               Analyze Another
             </button>
           </div>
+
+          {/* Brand Alignment - MOVED TO TOP */}
+          {analysisResult.brandAlignment && (
+            <div className="p-6 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl border-2 border-purple-500/60 shadow-lg shadow-purple-500/20">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <p className="text-gray-300 text-xs uppercase tracking-wide mb-1">Brand Alignment</p>
+                  <p className="text-gray-400 text-xs">How well this video matches your brand identity</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <div className="flex items-baseline gap-1">
+                      <span className={`text-5xl font-black ${
+                        analysisResult.brandAlignment.overallScore >= 80 ? 'text-green-400' :
+                        analysisResult.brandAlignment.overallScore >= 60 ? 'text-yellow-400' :
+                        'text-orange-400'
+                      }`}>
+                        {analysisResult.brandAlignment.overallScore}
+                      </span>
+                      <span className="text-gray-400 text-lg font-semibold">/100</span>
+                    </div>
+                    <p className={`text-xs font-semibold mt-1 ${
+                      analysisResult.brandAlignment.overallScore >= 80 ? 'text-green-400' :
+                      analysisResult.brandAlignment.overallScore >= 60 ? 'text-yellow-400' :
+                      'text-orange-400'
+                    }`}>
+                      {analysisResult.brandAlignment.overallScore >= 80 ? 'Excellent Match' :
+                       analysisResult.brandAlignment.overallScore >= 60 ? 'Good Match' :
+                       'Needs Adjustment'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Dimension Scores */}
+              <div className="space-y-3 mb-5 bg-black/20 p-4 rounded-xl">
+                <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">Dimension Breakdown</p>
+                {Object.entries(analysisResult.brandAlignment.dimensionScores).map(([dimension, score]) => (
+                  <div key={dimension} className="flex items-center gap-3">
+                    <span className="text-sm text-gray-300 w-24 capitalize font-medium">{dimension}</span>
+                    <div className="flex-1 h-3 bg-black/40 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-purple-400 rounded-full transition-all duration-500"
+                        style={{ width: `${score}%` }}
+                      />
+                    </div>
+                    <span className="text-sm text-white font-bold w-10 text-right">{score}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Strengths */}
+              {analysisResult.brandAlignment.strengths.length > 0 && (
+                <div className="mb-4 bg-green-500/10 border border-green-500/30 p-4 rounded-xl">
+                  <p className="text-sm text-green-400 font-bold mb-2 flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    What&apos;s Working
+                  </p>
+                  <ul className="space-y-2">
+                    {analysisResult.brandAlignment.strengths.map((strength, index) => (
+                      <li key={index} className="text-sm text-gray-200 leading-relaxed pl-4 border-l-2 border-green-500/40">
+                        {strength}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Improvements */}
+              {analysisResult.brandAlignment.improvements.length > 0 && (
+                <div className="mb-4 bg-orange-500/10 border border-orange-500/30 p-4 rounded-xl">
+                  <p className="text-sm text-orange-400 font-bold mb-2 flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clipRule="evenodd" />
+                    </svg>
+                    What to Improve
+                  </p>
+                  <ul className="space-y-2">
+                    {analysisResult.brandAlignment.improvements.map((improvement, index) => (
+                      <li key={index} className="text-sm text-gray-200 leading-relaxed pl-4 border-l-2 border-orange-500/40">
+                        {improvement}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Recommendations */}
+              <div className="pt-4 border-t border-white/10">
+                <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">Recommendation</p>
+                <p className="text-sm text-purple-200 leading-relaxed">{analysisResult.brandAlignment.recommendations}</p>
+              </div>
+            </div>
+          )}
 
           {/* Title */}
           <div className="p-4 bg-white/5 rounded-xl border border-purple-500/30">

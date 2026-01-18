@@ -4,6 +4,7 @@ import {
   analyzeVideo,
   getTaskStatus
 } from '@/lib/ai/twelvelabs'
+import { analyzeVideoBrandAlignment } from '@/lib/ai/backboard-initialize'
 import { readMemory, writeMemory } from '@/lib/memory'
 
 /**
@@ -79,6 +80,30 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Analyze brand alignment using Backboard.io with Grok-3
+    let brandAlignment
+    try {
+      // Only run brand alignment if we have a Backboard session
+      if (meta.backboardSessionId) {
+        console.log('🎯 Analyzing brand alignment with Grok-3...')
+        brandAlignment = await analyzeVideoBrandAlignment(
+          meta.backboardSessionId,
+          {
+            title: analysisResult.title,
+            topics: analysisResult.topics,
+            hashtags: analysisResult.hashtags,
+            summary: analysisResult.summary,
+            chapters: analysisResult.chapters,
+            highlights: analysisResult.highlights
+          }
+        )
+        console.log(`✅ Brand alignment: ${brandAlignment.overallScore}/100`)
+      }
+    } catch (error) {
+      console.error('Brand alignment analysis failed:', error)
+      // Continue without brand alignment if it fails
+    }
+
     // Store video analysis results in content memory
     const contentMemory = await readMemory('content')
     const videoAnalysis = {
@@ -90,6 +115,9 @@ export async function POST(request: NextRequest) {
       topics: analysisResult.topics,
       hashtags: analysisResult.hashtags,
       summary: analysisResult.summary,
+      chapters: analysisResult.chapters,
+      highlights: analysisResult.highlights,
+      brandAlignment,
       analyzedAt: new Date().toISOString()
     }
 
@@ -108,7 +136,10 @@ export async function POST(request: NextRequest) {
         title: analysisResult.title,
         topics: analysisResult.topics,
         hashtags: analysisResult.hashtags,
-        summary: analysisResult.summary
+        summary: analysisResult.summary,
+        chapters: analysisResult.chapters,
+        highlights: analysisResult.highlights,
+        brandAlignment
       }
     })
   } catch (error) {

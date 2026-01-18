@@ -1,26 +1,27 @@
 {
   "persona": {
-    "archetype": "Peer-Guide",
+    "archetype": "Educator-Expert",
     "coreThemes": [
-      "Business",
+      "Tech Reviews",
       "tactical",
       "how-to",
       "actionable"
     ],
     "voice": {
       "style": [
-        "balanced"
+        "calm",
+        "measured"
       ],
-      "pacing": "moderate",
+      "pacing": "slow",
       "emotionalRange": [
-        "motivational",
-        "inspiring"
+        "analytical",
+        "logical"
       ]
     }
   },
   "positioning": {
     "whatYouAreKnownFor": [
-      "Business",
+      "Tech Reviews",
       "tactical"
     ],
     "whatYouAvoid": [

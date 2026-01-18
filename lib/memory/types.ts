@@ -96,6 +96,21 @@ export interface VideoAnalysis {
   topics: string[]
   hashtags: string[]
   summary: string
+  chapters?: unknown[]
+  highlights?: unknown[]
+  brandAlignment?: {
+    overallScore: number
+    dimensionScores: {
+      tone: number
+      authority: number
+      depth: number
+      emotion: number
+      risk: number
+    }
+    strengths: string[]
+    improvements: string[]
+    recommendations: string
+  }
   analyzedAt: string
 }
 

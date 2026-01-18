@@ -292,3 +292,152 @@ export async function sendIdeasMessage(
     throw new Error('Could not send message to ideas thread')
   }
 }
+
+/**
+ * Analyze video brand alignment using Backboard.io with Grok-3
+ * Compares video analysis against creator's 5-dimension brand identity
+ */
+interface VideoChapter {
+  chapterTitle?: string
+  headline?: string
+  chapterSummary?: string
+  summary?: string
+  start?: number
+  end?: number
+}
+
+interface VideoHighlight {
+  highlightTitle?: string
+  title?: string
+  highlightSummary?: string
+  summary?: string
+  start?: number
+  end?: number
+}
+
+export async function analyzeVideoBrandAlignment(
+  threadId: string,
+  videoAnalysis: {
+    title: string
+    topics: string[]
+    hashtags: string[]
+    summary: string
+    chapters?: VideoChapter[]
+    highlights?: VideoHighlight[]
+  }
+): Promise<{
+  overallScore: number
+  dimensionScores: {
+    tone: number
+    authority: number
+    depth: number
+    emotion: number
+    risk: number
+  }
+  strengths: string[]
+  improvements: string[]
+  recommendations: string
+}> {
+  const client = getBackboardClient()
+
+  try {
+    console.log('🎯 Analyzing video brand alignment with Grok-3...')
+    // Format chapters and highlights for context
+    const chaptersText = videoAnalysis.chapters && videoAnalysis.chapters.length > 0
+      ? `\n\nChapters:\n${videoAnalysis.chapters.map((ch: VideoChapter, i: number) =>
+          `${i + 1}. ${ch.chapterTitle || ch.headline || 'Chapter'} (${ch.start || 0}s - ${ch.end || 0}s): ${ch.chapterSummary || ch.summary || ''}`
+        ).join('\n')}`
+      : ''
+
+    const highlightsText = videoAnalysis.highlights && videoAnalysis.highlights.length > 0
+      ? `\n\nKey Highlights:\n${videoAnalysis.highlights.map((hl: VideoHighlight, i: number) =>
+          `${i + 1}. ${hl.highlightTitle || hl.title || 'Highlight'} (${hl.start || 0}s - ${hl.end || 0}s): ${hl.highlightSummary || hl.summary || ''}`
+        ).join('\n')}`
+      : ''
+
+    const prompt = `Using my brand identity and target audience specification from our previous conversations memory, analyze how well this video aligns with my authentic brand.
+
+**Video Analysis from Twelve Labs:**
+- **Title**: ${videoAnalysis.title}
+- **Topics**: ${videoAnalysis.topics.join(', ')}
+- **Hashtags**: ${videoAnalysis.hashtags.join(', ')}
+- **Summary**: ${videoAnalysis.summary}${chaptersText}${highlightsText}
+
+**Your Task:**
+As a content creator, I need ACTIONABLE feedback on this video - not just a recap. Tell me EXACTLY what's working and what's not, with specific timestamps and examples.
+
+Provide your response in the following JSON format (respond ONLY with valid JSON, no other text):
+
+{
+  "overallScore": <number 0-100>,
+  "dimensionScores": {
+    "tone": <number 0-100>,
+    "authority": <number 0-100>,
+    "depth": <number 0-100>,
+    "emotion": <number 0-100>,
+    "risk": <number 0-100>
+  },
+  "strengths": [<array of 2-4 SPECIFIC strengths with timestamps/examples from the video>],
+  "improvements": [<array of 2-4 SPECIFIC, ACTIONABLE suggestions with timestamps/examples>],
+  "recommendations": "<1-2 sentences on whether I should create more content like this or adjust my approach>"
+}
+
+**CRITICAL REQUIREMENTS:**
+- Be SPECIFIC with timestamps (e.g., "at 0:45 the personal story creates authentic vulnerability")
+- Be ACTIONABLE (e.g., "add 30 seconds explaining the technical process at 1:20 because your audience expects depth")
+- Reference ACTUAL content from the video analysis (topics, chapters, highlights)
+- Use creator-focused language (what I should DO, not academic analysis)
+- Don't say "good emotional connection" - say "the story at X timestamp connects emotionally because Y"
+- Don't say "add more depth" - say "explain X in more detail at Y timestamp, similar to your top-performing content"`
+
+    const response = await client.addMessage(threadId, {
+      content: prompt,
+      memory: 'Auto',
+      llm_provider: selectModelForTask('trend_analysis').provider,  // Use X.AI for Grok-3
+      model_name: selectModelForTask('trend_analysis').model,  // Grok-3 model
+      web_search: 'Off'  // Don't need web search for this analysis
+    })
+
+    console.log('✅ Brand alignment analysis complete')
+
+    // Parse JSON response
+    const content = response.content || '{}'
+
+    // Extract JSON from response (in case there's extra text)
+    const jsonMatch = content.match(/\{[\s\S]*\}/)
+    const jsonStr = jsonMatch ? jsonMatch[0] : content
+
+    const result = JSON.parse(jsonStr)
+
+    return {
+      overallScore: result.overallScore || 50,
+      dimensionScores: result.dimensionScores || {
+        tone: 50,
+        authority: 50,
+        depth: 50,
+        emotion: 50,
+        risk: 50
+      },
+      strengths: result.strengths || [],
+      improvements: result.improvements || [],
+      recommendations: result.recommendations || 'Unable to generate recommendations'
+    }
+  } catch (error) {
+    console.error('Failed to analyze video brand alignment:', error)
+
+    // Return default scores on error
+    return {
+      overallScore: 50,
+      dimensionScores: {
+        tone: 50,
+        authority: 50,
+        depth: 50,
+        emotion: 50,
+        risk: 50
+      },
+      strengths: ['Analysis unavailable'],
+      improvements: ['Please try again'],
+      recommendations: 'Unable to analyze brand alignment at this time.'
+    }
+  }
+}

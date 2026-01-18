@@ -1,48 +1,53 @@
 {
   "creator": {
-    "name": "Alex Hormozi",
-    "experienceLevel": "advanced",
+    "name": "Michal",
+    "experienceLevel": "intermediate",
     "background": [
-      "Business"
+      "Tech Reviews"
     ],
     "goals": [
-      "to be as entertaining as possible",
-      "become famous"
+      "grow personal brand",
+      "increase engagement",
+      "monetize content",
+      "build community",
+      "land sponsor deals"
     ]
   },
   "audience": {
     "targetViewer": {
-      "ageRange": "30-70",
+      "ageRange": "18-35",
       "interests": [
-        "acting",
-        "movies",
-        "shows",
-        "hollywood"
+        "technology",
+        "business",
+        "software",
+        "productivity",
+        "audio"
       ],
       "painPoints": [
-        "bored without good things to watch",
-        "bad acting",
-        "need for personable celebrities"
+        "information overload",
+        "finding quality resources"
       ]
     },
     "platforms": [
+      "YouTube",
       "Instagram",
-      "YouTube"
+      "Twitter/X"
     ],
-    "aiGeneratedSummary": "Based on the significant profile changes you've made, here's an updated target audience summary that reflects your evolution from business content to entertainment focus:\n\n## Updated Target Audience Summary\n\n**Demographics:**\n- Age: 30-70 years old (expanded range to capture broader entertainment audience)\n- Primary focus: Adults seeking entertainment and celebrity content\n\n**Core Interests:**\n- Acting and movies\n- TV shows and streaming content\n- Hollywood and celebrity culture\n- Entertainment industry insights\n\n**Pain Points:**\n- Boredom from lack of quality entertainment content\n- Frustration with poor acting quality\n- Desire for more personable, relatable celebrities\n- Need for engaging entertainment commentary\n\n**Platform Strategy:**\n- **Instagram**: Primary platform for entertainment content, celebrity insights, behind-the-scenes content\n- **YouTube**: Secondary platform for longer-form entertainment analysis and movie/show reviews\n\n**Content Needs:**\n- Entertainment-focused content with personality\n- Celebrity insights and industry commentary\n- Movie/show recommendations and reviews\n- Behind-the-scenes entertainment industry content\n- Monthly high-quality posts (1200s video length) rather than daily content\n\n**Brand Positioning:**\nAs a Peer-Guide archetype, your audience wants someone who feels like a knowledgeable friend in the entertainment space - someone who can guide them to great content while being entertaining themselves.\n\nThis represents a complete pivot from your previous business-focused audience to an entertainment-oriented community seeking engaging, celebrity-style content with industry insights."
+    "aiGeneratedSummary": "Based on the creator profile document, here's a concise summary of Michal's ideal target audience:\n\n## **Target Audience Profile**\n\n**Demographics:**\n- Age: 18-35 years old\n- Tech-savvy individuals seeking reliable product insights\n\n**Core Interests:**\n- Technology & tech products\n- Business and entrepreneurship  \n- Software and productivity tools\n- Audio equipment and gear\n\n**Primary Platforms:**\n- YouTube (main platform for long-form content)\n- Instagram (visual content and community building)\n- Twitter/X (quick updates and engagement)\n\n**Content Needs:**\n- **Tactical, actionable advice** they can immediately implement\n- **Calm, analytical reviews** that cut through marketing hype\n- **Educational content** that helps them make informed purchasing decisions\n- **Measured expertise** rather than flashy entertainment\n\n## **Content Strategy Applications:**\n\n✅ **Do:** Focus on practical tech reviews, productivity tips, and educational content\n✅ **Do:** Maintain calm, analytical tone across all platforms\n✅ **Do:** Provide actionable takeaways in every piece of content\n\n❌ **Avoid:** Controversial topics or overly promotional content\n❌ **Avoid:** Rushed or overly energetic delivery styles\n\nThis audience values expertise over entertainment and prefers content that helps them make better decisions rather than just keeping them entertained."
   },
   "constraints": {
-    "postingFrequency": "monthly",
-    "videoLengthSeconds": 1200,
+    "postingFrequency": "weekly",
+    "videoLengthSeconds": 420,
     "tone": [
-      "balanced"
+      "calm",
+      "measured"
     ]
   },
   "rawDimensions": {
-    "tone": 44,
-    "authority": 52,
-    "depth": 25,
-    "emotion": 75,
-    "risk": 35
+    "tone": 80,
+    "authority": 70,
+    "depth": 10,
+    "emotion": 20,
+    "risk": 30
   }
 }

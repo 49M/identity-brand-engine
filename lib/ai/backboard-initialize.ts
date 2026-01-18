@@ -674,7 +674,7 @@ Search the web and identify the top 3 viral trends in ${niche} content. For EACH
 3. **My Brand Adaptation** - How I can authentically adapt this trend to MY voice dimensions
 4. **Ready-to-Use Idea** - A specific, actionable video concept that combines this trend with my brand
 
-**Output Format (use markdown):**
+**Output Format (use markdown):** FOLLOW EXACTLY THIS FORMAT IN YOUR RESPONSE USING REAL TRENDING INFO:
 
 # 🔥 Trending content in ${niche} Right Now
 

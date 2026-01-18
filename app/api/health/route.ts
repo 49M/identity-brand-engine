@@ -12,11 +12,11 @@ export async function GET() {
   }
 
   const missing = Object.entries(requiredEnvVars)
-    .filter(([_, value]) => !value)
+    .filter(([, value]) => !value)
     .map(([key]) => key)
 
   const configured = Object.entries(requiredEnvVars)
-    .filter(([_, value]) => value)
+    .filter(([, value]) => value)
     .map(([key]) => key)
 
   return NextResponse.json({

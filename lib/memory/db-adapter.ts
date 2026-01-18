@@ -42,7 +42,7 @@ export async function dbRead<T>(key: string): Promise<T | null> {
     try {
       const content = await fs.readFile(filePath, 'utf-8')
       return JSON.parse(content) as T
-    } catch (error) {
+    } catch {
       // File doesn't exist
       return null
     }

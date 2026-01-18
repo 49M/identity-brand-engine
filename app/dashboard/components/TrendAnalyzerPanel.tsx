@@ -51,7 +51,7 @@ export default function TrendAnalyzerPanel({ onClose }: TrendAnalyzerPanelProps)
                 </svg>
                 🔥 Viral Trend Analyzer
               </h2>
-              <p className="text-gray-400 text-sm mt-1">Discover what's trending and how to make it yours</p>
+              <p className="text-gray-400 text-sm mt-1">Discover what&apos;s trending and how to make it yours</p>
             </div>
             <button
               onClick={onClose}
@@ -75,7 +75,7 @@ export default function TrendAnalyzerPanel({ onClose }: TrendAnalyzerPanelProps)
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Ready to Find Viral Trends?</h3>
               <p className="text-gray-400 mb-6 max-w-lg mx-auto">
-                I'll search the web for what's trending in your niche right now and show you how to adapt it to your authentic brand voice.
+                I&apos;ll search the web for what&apos;s trending in your niche right now and show you how to adapt it to your authentic brand voice.
               </p>
               <button
                 onClick={handleAnalyzeTrends}
@@ -94,7 +94,7 @@ export default function TrendAnalyzerPanel({ onClose }: TrendAnalyzerPanelProps)
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Searching the Web for Trends...</h3>
-              <p className="text-gray-400 mb-2">Finding what's viral in your niche</p>
+              <p className="text-gray-400 mb-2">Finding what&apos;s viral in your niche</p>
               <p className="text-gray-500 text-sm">This may take 30-60 seconds</p>
             </div>
           )}

@@ -9,9 +9,8 @@ import { readMemory } from '@/lib/memory'
  */
 export async function GET() {
   try {
-    // Get profile and brand data
+    // Get profile data
     const profile = await readMemory('profile')
-    const brand = await readMemory('brand')
     const meta = await readMemory('meta')
 
     if (!meta.backboardSessionId) {

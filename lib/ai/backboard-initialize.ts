@@ -57,6 +57,53 @@ Always reference this context when providing advice.`
 }
 
 /**
+ * Delete a document from Backboard assistant
+ */
+export async function deleteDocument(documentId: string): Promise<void> {
+  const client = getBackboardClient()
+
+  try {
+    await client.deleteDocument(documentId)
+    console.log('🗑️  Deleted old document:', documentId)
+  } catch (error) {
+    console.error('Failed to delete document:', error)
+    // Don't throw - we want to continue even if deletion fails
+  }
+}
+
+/**
+ * Delete all documents from an assistant to ensure clean context
+ */
+export async function cleanupAssistantDocuments(assistantId: string): Promise<void> {
+  const client = getBackboardClient()
+
+  try {
+    console.log('🧹 Cleaning up old documents from assistant...')
+
+    // Get all documents for this assistant
+    const documents = await client.listAssistantDocuments(assistantId)
+
+    if (documents && documents.length > 0) {
+      console.log(`   Found ${documents.length} existing document(s) to remove`)
+
+      // Delete each document
+      for (const doc of documents) {
+        if (doc.documentId) {
+          await deleteDocument(doc.documentId)
+        }
+      }
+
+      console.log('✅ All old documents cleaned up')
+    } else {
+      console.log('   No existing documents to clean up')
+    }
+  } catch (error) {
+    console.error('Failed to cleanup assistant documents:', error)
+    // Don't throw - we want to continue even if cleanup fails
+  }
+}
+
+/**
  * Upload creator profile as document to Backboard
  */
 export async function uploadCreatorProfile(
@@ -191,7 +238,7 @@ export async function getInitialTargetAudience(threadId: string): Promise<string
   const client = getBackboardClient();
   try {
     const response = await client.addMessage(threadId, {
-      content: 'Based on the creator profile document provided, please summarize the ideal target audience for this content creator. Include demographics, interests, platforms they are most active on, content needs, and any other useful information. Keep it concise and very easy to follow and apply into the creators content strategy.',
+      content: 'Based on my creator profile document provided, please summarize the ideal target audience for me as a content creator. Include demographics, interests, platforms they are most active on, content needs, and any other useful information. Keep it concise and very easy to follow and apply into the creators content strategy.',
       memory: 'Auto',
       llm_provider: selectModelForTask('identity_reasoning').provider,
       model_name: selectModelForTask('identity_reasoning').model,

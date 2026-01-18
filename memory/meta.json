@@ -1,16 +1,16 @@
 {
   "version": "0.1.0",
   "createdAt": "2026-01-17T00:00:00Z",
-  "lastUpdated": "2026-01-18T07:31:22.228Z",
+  "lastUpdated": "2026-01-18T08:06:18.879Z",
   "onboardingComplete": true,
   "activePersonaId": "primary",
   "flags": {
     "needsReanalysis": false
   },
-  "backboardSessionId": "44a27d87-144a-42cd-a89e-0fff8dc623af",
-  "backboardAssistantId": "ab041433-dc8a-4eac-b1e4-b1196a666010",
-  "backboardDocumentId": "f97ecbe6-9d9b-4aa1-a341-68337af4c7dc",
-  "targetAudience": "Based on the creator profile document, here's a concise summary of Michal's ideal target audience:\n\n## **Target Audience Profile**\n\n**Demographics:**\n- Age: 18-35 years old\n- Tech-savvy individuals seeking reliable product insights\n\n**Core Interests:**\n- Technology & tech products\n- Business and entrepreneurship  \n- Software and productivity tools\n- Audio equipment and gear\n\n**Primary Platforms:**\n- YouTube (main platform for long-form content)\n- Instagram (visual content and community building)\n- Twitter/X (quick updates and engagement)\n\n**Content Needs:**\n- **Tactical, actionable advice** they can immediately implement\n- **Calm, analytical reviews** that cut through marketing hype\n- **Educational content** that helps them make informed purchasing decisions\n- **Measured expertise** rather than flashy entertainment\n\n## **Content Strategy Applications:**\n\n✅ **Do:** Focus on practical tech reviews, productivity tips, and educational content\n✅ **Do:** Maintain calm, analytical tone across all platforms\n✅ **Do:** Provide actionable takeaways in every piece of content\n\n❌ **Avoid:** Controversial topics or overly promotional content\n❌ **Avoid:** Rushed or overly energetic delivery styles\n\nThis audience values expertise over entertainment and prefers content that helps them make better decisions rather than just keeping them entertained.",
+  "backboardSessionId": "f7fe46ff-ba99-446a-bd2d-47f75e458d8d",
+  "backboardAssistantId": "1c92ceb8-525f-4f8b-a2b0-ebf2c05659b0",
+  "backboardDocumentId": "77eec910-9cef-4326-ae58-e4a739b1a5ad",
+  "targetAudience": "Based on the creator profile document, here's the ideal target audience for this content creator:\n\n## Target Audience Summary\n\n**Demographics:**\n- Age: 20-40 years old\n\n**Primary Interests:**\n- 8-Ball Pool (core interest)\n- Fitness\n- Entertainment\n- Game rooms\n- Bars\n\n**Platform Preferences:**\n- Instagram (primary)\n- TikTok (primary) \n- Twitter/X (primary)\n\n**Content Needs:**\n- Tactical 8-Ball Pool instruction\n- How-to content and tutorials\n- Analytical breakdowns of pool strategies\n- Educational content delivered in a calm, logical manner\n\n**Content Strategy Applications:**\n- Focus on educational pool content that teaches tactics and techniques\n- Keep videos around 45 seconds for optimal engagement\n- Maintain a calm, measured tone that appeals to serious pool enthusiasts\n- Target the entertainment/gaming community who frequent bars and game rooms\n- Create content that bridges the gap between casual bar players and more serious pool enthusiasts\n- Post weekly to maintain consistent engagement with this audience\n\nThis audience seeks authoritative, educational pool content from someone they can trust to improve their game, making them ideal for building a loyal community around tactical pool expertise.",
   "backboardIdeasThreadId": "eec9f5e1-f729-4f6a-b3b1-6f3d3d2af172",
   "twelveLabsIndexId": "696c4884684c0432bbde8a94"
 }

@@ -2,7 +2,7 @@
   "persona": {
     "archetype": "Educator-Expert",
     "coreThemes": [
-      "Tech Reviews",
+      "8-Ball Pool",
       "tactical",
       "how-to",
       "actionable"
@@ -12,7 +12,7 @@
         "calm",
         "measured"
       ],
-      "pacing": "slow",
+      "pacing": "moderate",
       "emotionalRange": [
         "analytical",
         "logical"
@@ -21,7 +21,7 @@
   },
   "positioning": {
     "whatYouAreKnownFor": [
-      "Tech Reviews",
+      "8-Ball Pool",
       "tactical"
     ],
     "whatYouAvoid": [

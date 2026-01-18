@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeMemory, initializeMemory, readMemory } from '@/lib/memory'
-import { getOrCreateAssistant, uploadCreatorProfile, createCreatorThread, getInitialTargetAudience } from '@/lib/ai/backboard-initialize'
+import { writeMemory, initializeMemory, readMemory, resetMemory } from '@/lib/memory'
+import { getOrCreateAssistant, uploadCreatorProfile, createCreatorThread, getInitialTargetAudience, cleanupAssistantDocuments } from '@/lib/ai/backboard-initialize'
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,6 +18,10 @@ export async function POST(request: NextRequest) {
       postingFrequency,
       videoLengthSeconds
     } = body
+
+    // Reset memory system to ensure clean slate for new profile
+    console.log('🔄 Resetting memory for new profile creation...')
+    await resetMemory()
 
     // Ensure JSON memory system is initialized
     await initializeMemory()
@@ -119,13 +123,16 @@ export async function POST(request: NextRequest) {
       console.log('📋 Step 1: Getting or creating Backboard assistant...')
       const assistantId = await getOrCreateAssistant()
 
-      console.log('📄 Step 2: Uploading creator profile as document...')
+      console.log('🧹 Step 2: Cleaning up old documents to ensure fresh context...')
+      await cleanupAssistantDocuments(assistantId)
+
+      console.log('📄 Step 3: Uploading creator profile as document...')
       const documentId = await uploadCreatorProfile(assistantId, profileMemory, brandMemory, creatorId)
 
-      console.log('💬 Step 3: Creating thread for creator...')
+      console.log('💬 Step 4: Creating thread for creator...')
       const threadId = await createCreatorThread(assistantId)
 
-      console.log('🎯 Step 4: Generating target audience analysis...')
+      console.log('🎯 Step 5: Generating target audience analysis...')
       const targetAudience = await getInitialTargetAudience(threadId)
 
       console.log('✅ Backboard initialization complete!')

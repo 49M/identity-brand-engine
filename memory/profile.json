@@ -1,53 +1,54 @@
 {
   "creator": {
-    "name": "Michal",
+    "name": "pool papi",
     "experienceLevel": "intermediate",
     "background": [
-      "Tech Reviews"
+      "8-Ball Pool"
     ],
     "goals": [
       "grow personal brand",
       "increase engagement",
-      "monetize content",
       "build community",
-      "land sponsor deals"
+      "get sponsored",
+      "promote deals on merch"
     ]
   },
   "audience": {
     "targetViewer": {
-      "ageRange": "18-35",
+      "ageRange": "20-40",
       "interests": [
-        "technology",
-        "business",
-        "software",
-        "productivity",
-        "audio"
+        "fitness",
+        "entertainment",
+        "game room",
+        "8-Ball Pool",
+        "Bars"
       ],
       "painPoints": [
-        "information overload",
-        "finding quality resources"
+        "skill issues",
+        "finding quality resources",
+        "staying motivated"
       ]
     },
     "platforms": [
-      "YouTube",
       "Instagram",
+      "TikTok",
       "Twitter/X"
     ],
-    "aiGeneratedSummary": "Based on the creator profile document, here's a concise summary of Michal's ideal target audience:\n\n## **Target Audience Profile**\n\n**Demographics:**\n- Age: 18-35 years old\n- Tech-savvy individuals seeking reliable product insights\n\n**Core Interests:**\n- Technology & tech products\n- Business and entrepreneurship  \n- Software and productivity tools\n- Audio equipment and gear\n\n**Primary Platforms:**\n- YouTube (main platform for long-form content)\n- Instagram (visual content and community building)\n- Twitter/X (quick updates and engagement)\n\n**Content Needs:**\n- **Tactical, actionable advice** they can immediately implement\n- **Calm, analytical reviews** that cut through marketing hype\n- **Educational content** that helps them make informed purchasing decisions\n- **Measured expertise** rather than flashy entertainment\n\n## **Content Strategy Applications:**\n\n✅ **Do:** Focus on practical tech reviews, productivity tips, and educational content\n✅ **Do:** Maintain calm, analytical tone across all platforms\n✅ **Do:** Provide actionable takeaways in every piece of content\n\n❌ **Avoid:** Controversial topics or overly promotional content\n❌ **Avoid:** Rushed or overly energetic delivery styles\n\nThis audience values expertise over entertainment and prefers content that helps them make better decisions rather than just keeping them entertained."
+    "aiGeneratedSummary": "Based on the creator profile document, here's the ideal target audience for this content creator:\n\n## Target Audience Summary\n\n**Demographics:**\n- Age: 20-40 years old\n\n**Primary Interests:**\n- 8-Ball Pool (core interest)\n- Fitness\n- Entertainment\n- Game rooms\n- Bars\n\n**Platform Preferences:**\n- Instagram (primary)\n- TikTok (primary) \n- Twitter/X (primary)\n\n**Content Needs:**\n- Tactical 8-Ball Pool instruction\n- How-to content and tutorials\n- Analytical breakdowns of pool strategies\n- Educational content delivered in a calm, logical manner\n\n**Content Strategy Applications:**\n- Focus on educational pool content that teaches tactics and techniques\n- Keep videos around 45 seconds for optimal engagement\n- Maintain a calm, measured tone that appeals to serious pool enthusiasts\n- Target the entertainment/gaming community who frequent bars and game rooms\n- Create content that bridges the gap between casual bar players and more serious pool enthusiasts\n- Post weekly to maintain consistent engagement with this audience\n\nThis audience seeks authoritative, educational pool content from someone they can trust to improve their game, making them ideal for building a loyal community around tactical pool expertise."
   },
   "constraints": {
     "postingFrequency": "weekly",
-    "videoLengthSeconds": 420,
+    "videoLengthSeconds": 45,
     "tone": [
       "calm",
       "measured"
     ]
   },
   "rawDimensions": {
-    "tone": 80,
-    "authority": 70,
+    "tone": 70,
+    "authority": 90,
     "depth": 10,
-    "emotion": 20,
-    "risk": 30
+    "emotion": 30,
+    "risk": 25
   }
 }

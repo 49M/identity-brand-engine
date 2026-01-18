@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 interface ChatMessage {
   role: 'user' | 'assistant'
@@ -9,21 +11,11 @@ interface ChatMessage {
 
 interface GetIdeasPanelProps {
   onClose: () => void
-  profileData: {
-    brand: {
-      persona: {
-        archetype: string
-        voice: {
-          style: string[]
-        }
-      }
-    }
-  }
 }
 
 type Platform = 'YouTube' | 'TikTok' | 'Instagram' | 'Twitter' | 'LinkedIn'
 
-export default function GetIdeasPanel({ onClose, profileData }: GetIdeasPanelProps) {
+export default function GetIdeasPanel({ onClose }: GetIdeasPanelProps) {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
   const [chatInput, setChatInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -123,19 +115,45 @@ export default function GetIdeasPanel({ onClose, profileData }: GetIdeasPanelPro
     setChatInput('')
     setIsLoading(true)
 
-    // TODO: Replace with actual Backboard API call
-    setTimeout(() => {
+    try {
+      // Call Backboard API for content ideas
+      const response = await fetch('/api/generate-content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: newMessage.content
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to generate content ideas')
+      }
+
       const aiResponse: ChatMessage = {
         role: 'assistant',
-        content: `Great question! Based on your ${profileData.brand.persona.archetype} archetype and ${profileData.brand.persona.voice.style.join(', ')} voice, here's a content idea that aligns with your brand:
-
-**Content Idea:** "5 Mistakes [Your Niche] Creators Make (And How to Fix Them)"
-
-This format matches your voice style while providing actionable value. The contrarian angle fits your brand positioning and will drive engagement from creators looking to improve.`
+        content: data.message
       }
+
       setChatMessages(prev => [...prev, aiResponse])
+    } catch (error) {
+      console.error('Error generating content ideas:', error)
+
+      // Show error message to user
+      const errorMessage: ChatMessage = {
+        role: 'assistant',
+        content: `Sorry, I encountered an error while generating content ideas. ${
+          error instanceof Error ? error.message : 'Please try again.'
+        }`
+      }
+
+      setChatMessages(prev => [...prev, errorMessage])
+    } finally {
       setIsLoading(false)
-    }, 1500)
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -293,7 +311,62 @@ This format matches your voice style while providing actionable value. The contr
                     ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
                     : 'bg-white/10 text-white'
                 }`}>
-                  <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                  {msg.role === 'assistant' ? (
+                    <div className="prose prose-invert prose-sm max-w-none">
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          // Headings
+                          h1: ({ children }) => <h1 className="text-2xl font-bold mb-3 text-white">{children}</h1>,
+                          h2: ({ children }) => <h2 className="text-xl font-bold mb-2 mt-4 text-white">{children}</h2>,
+                          h3: ({ children }) => <h3 className="text-lg font-semibold mb-2 mt-3 text-white">{children}</h3>,
+
+                          // Paragraphs
+                          p: ({ children }) => <p className="mb-3 text-gray-200 leading-relaxed">{children}</p>,
+
+                          // Lists
+                          ul: ({ children }) => <ul className="list-disc list-inside mb-3 space-y-1 text-gray-200">{children}</ul>,
+                          ol: ({ children }) => <ol className="list-decimal list-inside mb-3 space-y-1 text-gray-200">{children}</ol>,
+                          li: ({ children }) => <li className="ml-2">{children}</li>,
+
+                          // Code
+                          code: ({ inline, children }: { inline?: boolean; children?: React.ReactNode }) =>
+                            inline ? (
+                              <code className="bg-black/30 text-pink-300 px-1.5 py-0.5 rounded text-sm font-mono">{children}</code>
+                            ) : (
+                              <code className="block bg-black/40 text-gray-200 p-3 rounded-lg text-sm font-mono overflow-x-auto mb-3">{children}</code>
+                            ),
+
+                          // Links
+                          a: ({ children, href }) => (
+                            <a href={href} target="_blank" rel="noopener noreferrer" className="text-pink-400 hover:text-pink-300 underline">
+                              {children}
+                            </a>
+                          ),
+
+                          // Blockquotes
+                          blockquote: ({ children }) => (
+                            <blockquote className="border-l-4 border-pink-500 pl-4 italic text-gray-300 my-3">
+                              {children}
+                            </blockquote>
+                          ),
+
+                          // Strong/Bold
+                          strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+
+                          // Emphasis/Italic
+                          em: ({ children }) => <em className="italic text-gray-300">{children}</em>,
+
+                          // Horizontal Rule
+                          hr: () => <hr className="border-white/20 my-4" />,
+                        }}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    </div>
+                  ) : (
+                    <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                  )}
                 </div>
               </div>
             ))}

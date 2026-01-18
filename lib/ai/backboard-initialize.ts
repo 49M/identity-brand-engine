@@ -241,3 +241,53 @@ If the changes significantly impact the target audience, provide an updated summ
     throw new Error('Could not update target audience');
   }
 }
+
+/**
+ * Get or create a thread for content ideas generation
+ * This thread is separate from the profile/audience thread to maintain clean contexts
+ */
+export async function getOrCreateIdeasThread(
+  assistantId: string,
+  existingThreadId?: string
+): Promise<string> {
+  if (existingThreadId) {
+    console.log('✅ Using existing ideas thread:', existingThreadId)
+    return existingThreadId
+  }
+
+  const client = getBackboardClient()
+
+  try {
+    const thread = await client.createThread(assistantId)
+    console.log('✅ Created new ideas thread:', thread.threadId)
+    return thread.threadId
+  } catch (error) {
+    console.error('Failed to create ideas thread:', error)
+    throw new Error('Could not create ideas thread')
+  }
+}
+
+/**
+ * Send a message to the ideas thread and get AI response
+ */
+export async function sendIdeasMessage(
+  threadId: string,
+  message: string
+): Promise<string> {
+  const client = getBackboardClient()
+
+  try {
+    const response = await client.addMessage(threadId, {
+      content: message,
+      memory: 'Auto',
+      llm_provider: selectModelForTask('content_generation').provider,
+      model_name: selectModelForTask('content_generation').model,
+      web_search: 'Auto'
+    })
+
+    return response.content || 'Unable to generate response'
+  } catch (err) {
+    console.error('Failed to send ideas message:', err)
+    throw new Error('Could not send message to ideas thread')
+  }
+}

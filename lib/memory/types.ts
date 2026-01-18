@@ -8,7 +8,8 @@ export interface MetaMemory {
   lastUpdated: string
   onboardingComplete: boolean
   activePersonaId: string
-  backboardSessionId?: string // Backboard.io thread ID for conversations
+  backboardSessionId?: string // Backboard.io thread ID for profile/audience management
+  backboardIdeasThreadId?: string // Backboard.io thread ID for content ideas generation
   backboardAssistantId?: string // Backboard.io assistant ID
   backboardDocumentId?: string // Backboard.io profile document ID
   targetAudience?: string

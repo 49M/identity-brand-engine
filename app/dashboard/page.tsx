@@ -399,7 +399,6 @@ export default function Dashboard() {
         {activePanel === 'ideas' && (
           <GetIdeasPanel
             onClose={() => setActivePanel(null)}
-            profileData={profileData}
           />
         )}
 

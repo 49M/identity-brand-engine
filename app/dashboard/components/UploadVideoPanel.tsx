@@ -57,6 +57,8 @@ export default function UploadVideoPanel({ onClose, onVideoAnalyzed }: UploadVid
   const [analysisProgress, setAnalysisProgress] = useState<string>('')
   const [analysisResult, setAnalysisResult] = useState<VideoAnalysis | null>(null)
   const [analysisError, setAnalysisError] = useState<string | null>(null)
+  const [isRemixing, setIsRemixing] = useState(false)
+  const [remixScript, setRemixScript] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleDrag = (e: React.DragEvent) => {
@@ -156,6 +158,38 @@ export default function UploadVideoPanel({ onClose, onVideoAnalyzed }: UploadVid
       setAnalysisError(error instanceof Error ? error.message : 'Failed to analyze video')
     } finally {
       setIsAnalyzing(false)
+    }
+  }
+
+  const handleRemixVideo = async () => {
+    if (!analysisResult) return
+
+    setIsRemixing(true)
+    setRemixScript(null)
+
+    try {
+      const response = await fetch('/api/video/remix', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          videoAnalysis: analysisResult
+        })
+      })
+
+      const data = await response.json()
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to generate remix')
+      }
+
+      setRemixScript(data.remix)
+    } catch (error) {
+      console.error('Video remix failed:', error)
+      alert(error instanceof Error ? error.message : 'Failed to generate video remix')
+    } finally {
+      setIsRemixing(false)
     }
   }
 
@@ -371,6 +405,141 @@ export default function UploadVideoPanel({ onClose, onVideoAnalyzed }: UploadVid
               <div className="pt-4 border-t border-white/10">
                 <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">Recommendation</p>
                 <p className="text-sm text-purple-200 leading-relaxed">{analysisResult.brandAlignment.recommendations}</p>
+              </div>
+
+              {/* Remix Button */}
+              <div className="pt-4 border-t border-white/10">
+                <button
+                  onClick={handleRemixVideo}
+                  disabled={isRemixing}
+                  className="w-full py-3 px-4 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-purple-500/30"
+                >
+                  {isRemixing ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Generating Your Remix...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      Remix This Video for My Brand
+                    </>
+                  )}
+                </button>
+                <p className="text-xs text-gray-400 text-center mt-2">
+                  Generate a brand-optimized script that maintains viral potential
+                </p>
+              </div>
+
+            </div>
+          )}
+
+          {/* Remix Script Display */}
+          {remixScript && (
+            <div className="p-6 bg-gradient-to-br from-pink-500/10 to-purple-500/10 rounded-2xl border-2 border-pink-500/40 shadow-lg">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h4 className="text-lg font-bold text-white mb-1 flex items-center gap-2">
+                    <svg className="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Your Brand-Optimized Remix
+                  </h4>
+                  <p className="text-xs text-gray-400">Ready-to-film script aligned with your identity</p>
+                </div>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(remixScript)
+                    alert('Script copied to clipboard!')
+                  }}
+                  className="text-pink-400 hover:text-pink-300 text-sm flex items-center gap-1"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  Copy Script
+                </button>
+              </div>
+
+              <div className="prose prose-invert prose-sm max-w-none bg-black/20 rounded-xl p-5 overflow-y-auto max-h-[600px]">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h1: ({ children }) => (
+                      <h1 className="text-2xl font-bold text-white mb-4 pb-2 border-b border-pink-500/30">{children}</h1>
+                    ),
+                    h2: ({ children }) => (
+                      <h2 className="text-xl font-bold text-pink-300 mt-6 mb-3">{children}</h2>
+                    ),
+                    h3: ({ children }) => (
+                      <h3 className="text-lg font-semibold text-purple-300 mt-4 mb-2">{children}</h3>
+                    ),
+                    p: ({ children }) => (
+                      <p className="text-gray-200 leading-relaxed mb-3">{children}</p>
+                    ),
+                    ul: ({ children }) => (
+                      <ul className="list-disc list-inside text-gray-200 mb-3 space-y-1">{children}</ul>
+                    ),
+                    ol: ({ children }) => (
+                      <ol className="list-decimal list-inside text-gray-200 mb-3 space-y-1">{children}</ol>
+                    ),
+                    li: ({ children }) => (
+                      <li className="text-gray-200">{children}</li>
+                    ),
+                    blockquote: ({ children }) => (
+                      <blockquote className="border-l-4 border-pink-500 pl-4 italic text-pink-200 my-3 bg-pink-500/10 py-2 rounded-r">
+                        {children}
+                      </blockquote>
+                    ),
+                    code: ({ children }) => (
+                      <code className="bg-purple-900/50 text-purple-200 px-1.5 py-0.5 rounded text-sm font-mono">
+                        {children}
+                      </code>
+                    ),
+                    strong: ({ children }) => (
+                      <strong className="text-white font-semibold">{children}</strong>
+                    ),
+                    em: ({ children }) => (
+                      <em className="text-gray-300 italic">{children}</em>
+                    ),
+                    hr: () => (
+                      <hr className="border-white/10 my-6" />
+                    )
+                  }}
+                >
+                  {remixScript}
+                </ReactMarkdown>
+              </div>
+
+              <div className="mt-4 flex items-center gap-3">
+                <button
+                  onClick={() => setRemixScript(null)}
+                  className="flex-1 py-2 px-4 bg-white/5 hover:bg-white/10 text-white rounded-lg transition-all duration-200"
+                >
+                  Close Remix
+                </button>
+                <button
+                  onClick={() => {
+                    const blob = new Blob([remixScript], { type: 'text/markdown' })
+                    const url = URL.createObjectURL(blob)
+                    const a = document.createElement('a')
+                    a.href = url
+                    a.download = `${analysisResult?.title.replace(/[^a-z0-9]/gi, '_')}_remix.md`
+                    a.click()
+                    URL.revokeObjectURL(url)
+                  }}
+                  className="flex-1 py-2 px-4 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Download Script
+                </button>
               </div>
             </div>
           )}

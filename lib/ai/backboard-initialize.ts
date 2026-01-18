@@ -488,3 +488,143 @@ Provide your response in the following JSON format (respond ONLY with valid JSON
     }
   }
 }
+
+/**
+ * Generate a remix of a video optimized for the creator's brand identity
+ * Takes original video analysis and creates a new script/format that maintains virality
+ * while aligning with the creator's authentic voice
+ */
+export async function remixVideoForBrand(
+  threadId: string,
+  videoAnalysis: {
+    title: string
+    topics: string[]
+    hashtags: string[]
+    summary: string
+    chapters?: unknown[]
+    highlights?: unknown[]
+    brandAlignment?: {
+      overallScore: number
+      dimensionScores: {
+        tone: number
+        authority: number
+        depth: number
+        emotion: number
+        risk: number
+      }
+      strengths: string[]
+      improvements: string[]
+      recommendations: string
+    }
+  }
+): Promise<string> {
+  const client = getBackboardClient()
+
+  try {
+    // Format chapters if available
+    const chaptersText = videoAnalysis.chapters && Array.isArray(videoAnalysis.chapters) && videoAnalysis.chapters.length > 0
+      ? `\n\nVideo Chapters:\n${videoAnalysis.chapters.map((ch: unknown, i: number) => {
+          const chapter = ch as VideoChapter
+          return `${i + 1}. ${chapter.chapterTitle || chapter.headline || 'Chapter'} (${chapter.start || 0}s - ${chapter.end || 0}s): ${chapter.chapterSummary || chapter.summary || ''}`
+        }).join('\n')}`
+      : ''
+
+    // Format highlights if available
+    const highlightsText = videoAnalysis.highlights && Array.isArray(videoAnalysis.highlights) && videoAnalysis.highlights.length > 0
+      ? `\n\nKey Highlights:\n${videoAnalysis.highlights.map((hl: unknown, i: number) => {
+          const highlight = hl as VideoHighlight
+          return `${i + 1}. ${highlight.highlightTitle || highlight.title || 'Highlight'} (${highlight.start || 0}s - ${highlight.end || 0}s): ${highlight.highlightSummary || highlight.summary || ''}`
+        }).join('\n')}`
+      : ''
+
+    // Format brand alignment feedback
+    const alignmentText = videoAnalysis.brandAlignment
+      ? `\n\n**Current Brand Alignment:**
+- Overall Score: ${videoAnalysis.brandAlignment.overallScore}/100
+- Dimension Scores: Tone (${videoAnalysis.brandAlignment.dimensionScores.tone}), Authority (${videoAnalysis.brandAlignment.dimensionScores.authority}), Depth (${videoAnalysis.brandAlignment.dimensionScores.depth}), Emotion (${videoAnalysis.brandAlignment.dimensionScores.emotion}), Risk (${videoAnalysis.brandAlignment.dimensionScores.risk})
+- Strengths: ${videoAnalysis.brandAlignment.strengths.join('; ')}
+- Areas to Improve: ${videoAnalysis.brandAlignment.improvements.join('; ')}`
+      : ''
+
+    const prompt = `I want to REMIX this video to be perfectly aligned with my brand identity while maintaining its viral potential.
+
+**Original Video:**
+- Title: ${videoAnalysis.title}
+- Topics: ${videoAnalysis.topics.join(', ')}
+- Summary: ${videoAnalysis.summary}${chaptersText}${highlightsText}${alignmentText}
+
+**Your Task:**
+Using my brand identity from our conversation memory, create a COMPLETE, READY-TO-FILM video script that:
+1. Keeps the viral hooks and engagement patterns from the original
+2. Transforms the content to match MY authentic voice and brand dimensions
+3. Maintains the same core value but expresses it through MY lens
+4. Provides specific scene-by-scene instructions I can follow
+
+**Output Format (use markdown formatting):**
+
+# Remixed Video Script
+
+## 📝 New Title
+[Your brand-aligned title that maintains virality]
+
+## 🎯 Hook (0-5 seconds)
+[Exact words to say + visual description]
+*Why this works for your brand: [brief explanation]*
+
+## 🎬 Scene-by-Scene Breakdown
+
+### Scene 1: [Name] (5-15 seconds)
+**Visuals:** [Specific camera angles, settings, props]
+**Script:**
+> [Exact words to say, formatted as dialogue]
+
+**Delivery Notes:** [How to say it - tone, pacing, energy level based on your brand]
+
+[Continue for each scene with timestamps]
+
+## 📊 Retention Strategy
+- **Hook elements:** [Specific techniques maintaining engagement]
+- **Mid-roll holds:** [What keeps viewers watching at 20s, 40s, etc.]
+- **Payoff:** [How the ending delivers value]
+
+## 🎨 Brand Alignment Improvements
+[Specific changes made to align with your dimensions:]
+- Tone: [What changed]
+- Authority: [What changed]
+- Depth: [What changed]
+- Emotion: [What changed]
+- Risk: [What changed]
+
+## 📋 Production Checklist
+- [ ] [Specific prop/setup item 1]
+- [ ] [Specific prop/setup item 2]
+- [ ] [Key talking points to hit]
+
+## 💡 Pro Tips
+[2-3 specific tips for filming this based on your style]
+
+---
+
+**CRITICAL REQUIREMENTS:**
+- Make it ACTIONABLE - I should be able to film this immediately
+- Keep it AUTHENTIC to my brand - no generic advice
+- Maintain VIRAL POTENTIAL - preserve what makes the original engaging
+- Be SPECIFIC - include exact words, camera angles, timing
+- Format beautifully with markdown - make it easy to scan and follow`
+
+    const response = await client.addMessage(threadId, {
+      content: prompt,
+      memory: 'Auto',
+      llm_provider: selectModelForTask('content_strategy').provider,
+      model_name: selectModelForTask('content_strategy').model,
+      web_search: 'Off'
+    })
+
+    console.log('✅ Video remix generated successfully')
+
+    return response.content || 'Unable to generate video remix. Please try again.'
+  } catch (error) {
+    console.error('Failed to generate video remix:', error)
+    throw new Error('Could not generate video remix')
+  }
+}

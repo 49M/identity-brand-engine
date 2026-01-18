@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm'
 
 interface UploadVideoPanelProps {
   onClose: () => void
+  onVideoAnalyzed?: () => void
 }
 
 // TODO: implement a remix feature which allows the user to remix the original content in a way which maintains virality but is catered uniquely to them.
@@ -49,7 +50,7 @@ function formatTime(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`
 }
 
-export default function UploadVideoPanel({ onClose }: UploadVideoPanelProps) {
+export default function UploadVideoPanel({ onClose, onVideoAnalyzed }: UploadVideoPanelProps) {
   const [dragActive, setDragActive] = useState(false)
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -141,6 +142,11 @@ export default function UploadVideoPanel({ onClose }: UploadVideoPanelProps) {
       // Show results
       setAnalysisResult(data.analysis)
       setAnalysisProgress('Analysis complete!')
+
+      // Notify parent component that video was analyzed
+      if (onVideoAnalyzed) {
+        onVideoAnalyzed()
+      }
     } catch (error) {
       console.error('Video analysis failed:', error)
 

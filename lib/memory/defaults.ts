@@ -61,7 +61,8 @@ export const defaultBrand: BrandMemory = {
 
 export const defaultContent: ContentMemory = {
   ideas: [],
-  published: []
+  published: [],
+  videoAnalyses: []
 }
 
 export const defaultInsights: InsightsMemory = {

@@ -4,6 +4,7 @@ import { promises as fs } from 'fs'
 import path from 'path'
 import { MemoryFile, MetaMemory, ProfileMemory, BrandMemory, ContentMemory, InsightsMemory } from './types'
 import { readMemory } from './read'
+import { defaultMeta, defaultProfile, defaultBrand, defaultContent, defaultInsights } from './defaults'
 
 const MEMORY_DIR = path.join(process.cwd(), 'memory')
 
@@ -127,9 +128,17 @@ export async function completeOnboarding(): Promise<void> {
 export async function resetMemory(): Promise<void> {
   const files: MemoryFile[] = ['meta', 'profile', 'brand', 'content', 'insights']
 
+  const defaults: Record<MemoryFile, MetaMemory | ProfileMemory | BrandMemory | ContentMemory | InsightsMemory> = {
+    meta: defaultMeta,
+    profile: defaultProfile,
+    brand: defaultBrand,
+    content: defaultContent,
+    insights: defaultInsights
+  }
+
   for (const file of files) {
-    const defaultData = await readMemory(file)
-    await writeMemory(file, defaultData, { merge: false })
+    // Use clean defaults instead of reading existing data
+    await writeMemory(file, defaults[file], { merge: false })
   }
 
   console.log('Memory system reset to defaults')

@@ -1,16 +1,14 @@
 {
   "version": "0.1.0",
-  "createdAt": "2026-01-17T00:00:00Z",
-  "lastUpdated": "2026-01-18T08:23:09.002Z",
+  "createdAt": "2026-01-18T08:48:45.734Z",
+  "lastUpdated": "2026-01-18T08:49:02.719Z",
   "onboardingComplete": true,
   "activePersonaId": "primary",
   "flags": {
     "needsReanalysis": false
   },
-  "backboardSessionId": "f7fe46ff-ba99-446a-bd2d-47f75e458d8d",
-  "backboardAssistantId": "1c92ceb8-525f-4f8b-a2b0-ebf2c05659b0",
-  "backboardDocumentId": "77eec910-9cef-4326-ae58-e4a739b1a5ad",
-  "targetAudience": "Based on the creator profile document, here's the ideal target audience for this content creator:\n\n## Target Audience Summary\n\n**Demographics:**\n- Age: 20-40 years old\n\n**Primary Interests:**\n- 8-Ball Pool (core interest)\n- Fitness\n- Entertainment\n- Game rooms\n- Bars\n\n**Platform Preferences:**\n- Instagram (primary)\n- TikTok (primary) \n- Twitter/X (primary)\n\n**Content Needs:**\n- Tactical 8-Ball Pool instruction\n- How-to content and tutorials\n- Analytical breakdowns of pool strategies\n- Educational content delivered in a calm, logical manner\n\n**Content Strategy Applications:**\n- Focus on educational pool content that teaches tactics and techniques\n- Keep videos around 45 seconds for optimal engagement\n- Maintain a calm, measured tone that appeals to serious pool enthusiasts\n- Target the entertainment/gaming community who frequent bars and game rooms\n- Create content that bridges the gap between casual bar players and more serious pool enthusiasts\n- Post weekly to maintain consistent engagement with this audience\n\nThis audience seeks authoritative, educational pool content from someone they can trust to improve their game, making them ideal for building a loyal community around tactical pool expertise.",
-  "backboardIdeasThreadId": "eec9f5e1-f729-4f6a-b3b1-6f3d3d2af172",
-  "twelveLabsIndexId": "696c4884684c0432bbde8a94"
+  "backboardSessionId": "eadc8b98-cd23-4ffe-a230-30de795bb0da",
+  "backboardAssistantId": "15757b26-a978-4859-9ef3-3ff635d8c230",
+  "backboardDocumentId": "11ae2e9b-56a4-4cf7-b161-e6f558b84faf",
+  "targetAudience": "Based on your creator profile document, here's your ideal target audience summary:\n\n## **Target Audience Profile for MichalCodes**\n\n### **Demographics**\n- **Age Range**: 16-30 years old\n- **Primary Interests**: Technology and startups\n- **Experience Level**: Likely beginner to intermediate in coding/software engineering\n\n### **Platform Preferences**\nYour audience is active across multiple platforms where you should focus your efforts:\n- **YouTube** (long-form tutorials and explanations)\n- **Instagram** (visual coding content, behind-the-scenes)\n- **TikTok** (quick coding tips and tricks)\n- **Twitter/X** (tech discussions, coding insights)\n- **LinkedIn** (professional networking, career advice)\n\n### **Content Needs & Expectations**\n- **Format**: Short-form content (120 seconds max) that's easily digestible\n- **Style**: Tactical and actionable coding content they can immediately apply\n- **Tone**: Balanced approach (not too casual, not too formal)\n- **Frequency**: Weekly content updates for consistent engagement\n- **Focus**: Software engineering fundamentals, practical coding tips, and career guidance\n\n### **Strategic Application**\nYour audience wants **quick wins** and **practical knowledge** they can use right away. They're looking to level up their coding skills while staying current with tech trends and startup culture. Focus on bite-sized, implementable advice that fits their busy, digital-native lifestyle.\n\nThis audience profile aligns perfectly with your goal to grow your personal brand and build a community around actionable coding education."
 }

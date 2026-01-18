@@ -74,6 +74,10 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [activePanel, setActivePanel] = useState<ActivePanel>(null)
   const [targetAudience, setTargetAudience] = useState<string>('')
+  const [brandCoherence, setBrandCoherence] = useState<{
+    score: number | null
+    videoCount: number
+  }>({ score: null, videoCount: 0 })
   const [identityDimensions, setIdentityDimensions] = useState<IdentityDimensions>({
     Tone: 50,
     Authority: 50,
@@ -99,6 +103,25 @@ export default function Dashboard() {
       setTargetAudience(data.targetAudience)
     }
     loadAudience()
+  }, [])
+
+  useEffect(() => {
+    async function loadBrandCoherence() {
+      try {
+        const response = await fetch('/api/brand-coherence')
+        const data = await response.json()
+
+        if (data.success) {
+          setBrandCoherence({
+            score: data.coherenceScore,
+            videoCount: data.videoCount
+          })
+        }
+      } catch (error) {
+        console.error('Failed to load brand coherence:', error)
+      }
+    }
+    loadBrandCoherence()
   }, [])
 
   useEffect(() => {
@@ -262,25 +285,67 @@ export default function Dashboard() {
 
           <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
             <h2 className="text-xl font-bold text-white mb-4">Brand Coherence</h2>
-            <div className="flex items-end justify-between mb-4">
-              <div>
-                <p className="text-sm text-gray-300 mb-2">Current Score</p>
-                <p className="text-5xl font-bold text-white">{Math.round(profileData.brand.confidenceScore * 100)}%</p>
+
+            {brandCoherence.score === null ? (
+              /* No videos uploaded state */
+              <div className="flex flex-col items-center justify-center py-8">
+                <div className="relative mb-6">
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500/30 to-pink-500/30 flex items-center justify-center animate-pulse">
+                    <svg className="w-12 h-12 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-lg font-bold">+</span>
+                  </div>
+                </div>
+                <p className="text-white font-semibold text-lg mb-2">Upload Content to Start</p>
+                <p className="text-gray-400 text-sm text-center max-w-[240px] mb-4">
+                  Upload videos to see how well they align with your brand identity
+                </p>
+                <button
+                  onClick={() => setActivePanel('upload')}
+                  className="px-6 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition-all"
+                >
+                  Upload Video
+                </button>
               </div>
-              <div className="text-right">
-                <p className="text-sm text-gray-300">Status</p>
-                <p className="text-green-400 font-semibold">Active</p>
-              </div>
-            </div>
-            <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-500"
-                style={{ width: `${profileData.brand.confidenceScore * 100}%` }}
-              ></div>
-            </div>
-            <p className="text-xs text-gray-400 mt-3">
-              Your score will evolve as you upload and analyze content
-            </p>
+            ) : (
+              /* Videos uploaded state */
+              <>
+                <div className="flex items-end justify-between mb-4">
+                  <div>
+                    <p className="text-sm text-gray-300 mb-2">Average Alignment Score</p>
+                    <p className="text-5xl font-bold text-white">{brandCoherence.score}%</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-300">Videos Analyzed</p>
+                    <p className={`font-semibold ${
+                      brandCoherence.score >= 80 ? 'text-green-400' :
+                      brandCoherence.score >= 60 ? 'text-yellow-400' :
+                      'text-orange-400'
+                    }`}>
+                      {brandCoherence.videoCount}
+                    </p>
+                  </div>
+                </div>
+                <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      brandCoherence.score >= 80 ? 'bg-gradient-to-r from-green-500 to-emerald-500' :
+                      brandCoherence.score >= 60 ? 'bg-gradient-to-r from-yellow-500 to-amber-500' :
+                      'bg-gradient-to-r from-orange-500 to-red-500'
+                    }`}
+                    style={{ width: `${brandCoherence.score}%` }}
+                  ></div>
+                </div>
+                <p className="text-xs text-gray-400 mt-3">
+                  {brandCoherence.score >= 80 ? '🎉 Excellent brand consistency!' :
+                   brandCoherence.score >= 60 ? '✓ Good alignment, room for improvement' :
+                   '⚠️ Consider reviewing your content strategy'}
+                </p>
+              </>
+            )}
           </div>
 
           <div className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 backdrop-blur-sm border border-cyan-500/30 rounded-2xl p-6 flex flex-col h-full">
@@ -393,7 +458,20 @@ export default function Dashboard() {
         )}
 
         {activePanel === 'upload' && (
-          <UploadVideoPanel onClose={() => setActivePanel(null)} />
+          <UploadVideoPanel
+            onClose={() => setActivePanel(null)}
+            onVideoAnalyzed={async () => {
+              // Refresh brand coherence after video analysis
+              const response = await fetch('/api/brand-coherence')
+              const data = await response.json()
+              if (data.success) {
+                setBrandCoherence({
+                  score: data.coherenceScore,
+                  videoCount: data.videoCount
+                })
+              }
+            }}
+          />
         )}
 
         {activePanel === 'ideas' && (

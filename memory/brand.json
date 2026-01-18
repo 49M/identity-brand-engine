@@ -2,15 +2,14 @@
   "persona": {
     "archetype": "Educator-Expert",
     "coreThemes": [
-      "8-Ball Pool",
+      "Coding/Software Engineering",
       "tactical",
       "how-to",
       "actionable"
     ],
     "voice": {
       "style": [
-        "calm",
-        "measured"
+        "balanced"
       ],
       "pacing": "moderate",
       "emotionalRange": [
@@ -21,12 +20,10 @@
   },
   "positioning": {
     "whatYouAreKnownFor": [
-      "8-Ball Pool",
+      "Coding/Software Engineering",
       "tactical"
     ],
-    "whatYouAvoid": [
-      "controversial topics"
-    ]
+    "whatYouAvoid": []
   },
   "confidenceScore": 0.5
 }

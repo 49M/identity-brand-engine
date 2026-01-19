@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { analyzeTrendingContent } from '@/lib/ai/backboard-initialize'
-import { readMemory } from '@/lib/memory'
+import { analyzeTrendingContent, getBackboardClient } from '@/lib/ai/backboard-initialize'
+import { readMemory, writeMemory } from '@/lib/memory'
 
 /**
  * GET /api/trends
@@ -13,7 +13,7 @@ export async function GET() {
     const profile = await readMemory('profile')
     const meta = await readMemory('meta')
 
-    if (!meta.backboardSessionId) {
+    if (!meta.backboardAssistantId) {
       return NextResponse.json(
         {
           success: false,
@@ -23,14 +23,30 @@ export async function GET() {
       )
     }
 
+    // Get or create a dedicated thread for trend analysis (separate from profile/audience thread)
+    // Reuse the backboardIdeasThreadId since trends and ideas are both content-generation tasks
+    let trendsThreadId = meta.backboardIdeasThreadId
+
+    if (!trendsThreadId) {
+      console.log('🆕 Creating dedicated thread for trend analysis...')
+      const client = getBackboardClient()
+      const thread = await client.createThread(meta.backboardAssistantId)
+      trendsThreadId = thread.threadId
+
+      // Store the new trends thread ID
+      meta.backboardIdeasThreadId = trendsThreadId
+      await writeMemory('meta', meta)
+      console.log('✅ Created trends thread:', trendsThreadId)
+    }
+
     // Get niche from profile
     const niche = profile.creator.background.find((bg: string) => bg.length > 0) || 'content creation'
 
-    console.log(`🔥 Analyzing trending ${niche} content...`)
+    console.log(`🔥 Analyzing trending ${niche} content using thread ${trendsThreadId}...`)
 
-    // Generate trend analysis with web search
+    // Generate trend analysis with web search using dedicated trends thread
     const trendAnalysis = await analyzeTrendingContent(
-      meta.backboardSessionId,
+      trendsThreadId!,
       niche,
       profile.rawDimensions
     )

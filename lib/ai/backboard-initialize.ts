@@ -11,7 +11,8 @@ let backboardClient: InstanceType<typeof BackboardClient> | null = null
 export function getBackboardClient(): InstanceType<typeof BackboardClient> {
   if (!backboardClient) {
     backboardClient = new BackboardClient({
-      apiKey: process.env.BACKBOARD_API_KEY || ''
+      apiKey: process.env.BACKBOARD_API_KEY || '',
+      timeout: 120000 // 2 minutes timeout for web search requests
     })
   }
   return backboardClient
@@ -654,7 +655,7 @@ export async function analyzeTrendingContent(
     const emotionDesc = brandDimensions.emotion > 60 ? 'highly inspirational' : brandDimensions.emotion < 40 ? 'analytical and data-driven' : 'balanced emotion'
     const riskDesc = brandDimensions.risk > 60 ? 'controversial and edgy' : brandDimensions.risk < 40 ? 'safe and approachable' : 'moderately bold'
 
-    const prompt = `You are analyzing trending content for a ${niche} creator. Use web search to find what's performing well RIGHT NOW in the last 7-10 days.
+    const prompt = `You are analyzing trending content for a ${niche} creator. Search the web to find what's performing well RIGHT NOW in the last 7-10 days and tailor your suggestions based on that.
 
 **CRITICAL CONTEXT - This Creator's Brand Identity:**
 I am a ${niche} creator with these specific brand dimensions:
@@ -664,47 +665,48 @@ I am a ${niche} creator with these specific brand dimensions:
 - **Emotion**: ${emotionDesc} (${brandDimensions.emotion}/100 scale)
 - **Risk**: ${riskDesc} (${brandDimensions.risk}/100 scale)
 
-ALL trend adaptations MUST match these exact dimensions. Do not give generic advice - tailor everything to MY specific voice.
+ALL trend adaptations MUST support these exact dimensions. Do not give generic advice - tailor everything to MY specific voice.
 
 **Your Task:**
-Search the web and identify the top 3 viral trends in ${niche} content. For EACH trend provide:
-
+Search the web and identify the top 3 viral trends in ${niche} content. For EACH trend determine this exact structure of information:
 1. **What's Trending** - Specific examples (titles, creators if possible, view counts if available)
 2. **Why It's Working** - Engagement psychology (hooks, format, timing, audience need)
-3. **My Brand Adaptation** - How I can authentically adapt this trend to MY voice dimensions
+3. **My Brand Adaptation** - How I can authentically adapt this trend to MY voice dimensions, ADAPT this trendy idea to fit my ${niche}, and tonality as described in the context above.
 4. **Ready-to-Use Idea** - A specific, actionable video concept that combines this trend with my brand
 
 **Output Format (use markdown):** FOLLOW EXACTLY THIS FORMAT IN YOUR RESPONSE USING REAL TRENDING INFO:
 
-# 🔥 Trending content in ${niche} Right Now
+FORMAT TO RETURN:
+------------------------------------------------
+  # 🔥 Trending content in ${niche} Right Now
 
-## Trend #1: [Trend Name]
+  ## Trend #1: [Trend Name]
 
-### 📊 What's Trending
-[Specific examples with details]
+  ### 📊 What's Trending
+  [Specific examples with details]
 
-### 🧠 Why It's Working
-[Engagement psychology - be specific about hooks, format, emotional triggers]
+  ### 🧠 Why It's Working
+  [Engagement psychology - be specific about hooks, format, emotional triggers]
 
-### 🎨 Your Brand Adaptation
-[How to adapt this to your ${toneDesc}, ${authorityDesc} voice]
+  ### 🎨 Your Brand Adaptation
+  [How to adapt this to your ${toneDesc}, ${authorityDesc} voice]
 
-### 💡 Ready-to-Use Video Idea
-**Title:** [Specific title]
-**Hook:** [First 5 seconds]
-**Format:** [Video structure]
-**Key Points:**
-- [Point 1]
-- [Point 2]
-- [Point 3]
+  ### 💡 Ready-to-Use Video Idea
+  **Title:** [Specific title]
+  **Hook:** [First 5 seconds]
+  **Format:** [Video structure]
+  **Key Points:**
+  - [Point 1]
+  - [Point 2]
+  - [Point 3]
+
+------------------------------------------------
+
+[Repeat same format for Trends #2 and #3]
 
 ---
 
-[Repeat for Trends #2 and #3]
-
----
-
-## 🎯 Quick Action Plan
+## 🎯 Extra Notes:
 
 Pick ONE trend for each topic that is highest ROI to create this week:
 - **Best for beginners:** [Which trend and why]
@@ -712,19 +714,21 @@ Pick ONE trend for each topic that is highest ROI to create this week:
 - **Most authentic to your brand:** [Which trend and why]
 
 **CRITICAL REQUIREMENTS:**
+- Do NOT ask questions or any clarifications, just answer with the above format in mind
 - Use REAL, CURRENT examples from web search (with specifics like views, creators)
 - Be ACTIONABLE - I should be able to start filming today
 - Stay AUTHENTIC - adaptations must fit my brand dimensions
-- Focus on PROVEN viral patterns - not speculation`
+- Focus on PROVEN viral patterns - not speculation
+- Follow the OUTPUT FORMAT exactly as specified`
 
     // Note: We explicitly include brand dimensions in the prompt rather than relying on memory
     // This ensures the first call works properly without needing a "warm-up"
     const response = await client.addMessage(threadId, {
       content: prompt,
-      memory: 'Off',  // Turned off since we're providing explicit context in the prompt
-      llm_provider: selectModelForTask('content_strategy').provider,
-      model_name: selectModelForTask('content_strategy').model,
-      web_search: 'On'  // Enable web search for real-time trends
+      memory: 'off',
+      llm_provider: 'xai',
+      model_name: 'grok-4-0709',
+      web_search: 'Auto'  // Enable web search for real-time trends
     })
 
     console.log('✅ Trend analysis complete')
@@ -732,6 +736,11 @@ Pick ONE trend for each topic that is highest ROI to create this week:
     return response.content || 'Unable to analyze trends. Please try again.'
   } catch (error) {
     console.error('Failed to analyze trends:', error)
-    throw new Error('Could not analyze trending content')
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      modelConfig: selectModelForTask('trend_analysis')
+    })
+    throw new Error(`Could not analyze trending content: ${error instanceof Error ? error.message : String(error)}`)
   }
 }

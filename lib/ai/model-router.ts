@@ -51,7 +51,7 @@ export function selectModelForTask(task: string): ModelSelection {
       reason: 'Fast, efficient compression and summarization'
     },
     'trend_analysis': {
-      model: 'grok-3',
+      model: 'grok-4-0709',
       provider: 'xai',
       reason: 'Real-time analysis and engagement pattern detection'
     }
@@ -269,7 +269,8 @@ function getBackboardModelId(model: ModelSelection): string {
     'gpt-5-chat-latest': 'openai/gpt-5-chat-latest',
     'gemini-2.5-flash': 'google/gemini-2.5-flash',
     'command-a-03-2025': 'cohere/command-a-03-2025',
-    'grok-3': 'xai/grok-3'
+    'grok-3': 'xai/grok-3',
+    'grok-4-0709': 'xai/grok-4-0709'
   }
 
   return modelMap[model.model] || 'anthropic/claude-sonnet-4-20250514'
@@ -282,7 +283,8 @@ function getTemperatureForTask(model: string): number {
     'gpt-5-chat-latest': 0.8,                    // Creative diversity
     'gemini-2.5-flash': 0.4,              // Strategic reasoning
     'command-a-03-2025': 0.2,             // Factual summary
-    'grok-3': 0.5                         // Balanced analysis
+    'grok-3': 0.5,                        // Balanced analysis
+    'grok-4-0709': 0.5                    // Balanced analysis
   }
 
   return temperatureMap[model] || 0.5
@@ -297,7 +299,8 @@ export function getModelDisplayName(model: ModelSelection): string {
     'gpt-5-chat-latest': '💡 GPT-5 Mini (OpenAI)',
     'gemini-2.5-flash': '🎯 Gemini 2.5 Flash (Google)',
     'command-a-03-2025': '⚡ Command A (Cohere)',
-    'grok-3': '📊 Grok 3 (xAI)'
+    'grok-3': '📊 Grok 3 (xAI)',
+    'grok-4-0709': '📊 Grok 4 (xAI)'
   }
 
   return displayMap[model.model] || model.model

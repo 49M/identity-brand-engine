@@ -51,9 +51,9 @@ export function selectModelForTask(task: string): ModelSelection {
       reason: 'Fast, efficient compression and summarization'
     },
     'trend_analysis': {
-      model: 'grok-4-0709',
-      provider: 'xai',
-      reason: 'Real-time analysis and engagement pattern detection'
+      model: 'claude-sonnet-4-20250514',
+      provider: 'anthropic',
+      reason: 'Fast, reliable analysis with web search - better than Grok for avoiding timeouts'
     }
   }
 

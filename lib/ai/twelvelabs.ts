@@ -3,6 +3,41 @@ import * as TwelvelabsApi from 'twelvelabs-js/api'
 
 let twelveLabsClient: TwelveLabs | null = null
 
+// Simple in-memory cache for video analysis results (expires after 1 hour)
+type CachedAnalysis = {
+  data: unknown
+  timestamp: number
+}
+const analysisCache = new Map<string, CachedAnalysis>()
+const CACHE_TTL = 60 * 60 * 1000 // 1 hour
+
+/**
+ * Get cached analysis result if available and not expired
+ */
+function getCachedAnalysis(cacheKey: string): unknown | null {
+  const cached = analysisCache.get(cacheKey)
+  if (!cached) return null
+
+  const isExpired = Date.now() - cached.timestamp > CACHE_TTL
+  if (isExpired) {
+    analysisCache.delete(cacheKey)
+    return null
+  }
+
+  console.log(`✅ Using cached analysis for ${cacheKey}`)
+  return cached.data
+}
+
+/**
+ * Store analysis result in cache
+ */
+function setCachedAnalysis(cacheKey: string, data: unknown): void {
+  analysisCache.set(cacheKey, {
+    data,
+    timestamp: Date.now()
+  })
+}
+
 /**
  * Get or create a Twelve Labs client instance
  * Implements singleton pattern for efficient resource usage
@@ -100,7 +135,14 @@ export async function uploadVideo(
  * Generate gist (title, topics, hashtags) from a video
  * This provides quick, actionable insights for content creators
  */
-export async function generateVideoGist(videoId: string) {
+export async function generateVideoGist(videoId: string, useCache: boolean = true) {
+  // Check cache first
+  if (useCache) {
+    const cacheKey = `gist:${videoId}`
+    const cached = getCachedAnalysis(cacheKey)
+    if (cached) return cached as { title: string; topics: string[]; hashtags: string[] }
+  }
+
   const client = getTwelveLabsClient()
 
   try {
@@ -112,11 +154,18 @@ export async function generateVideoGist(videoId: string) {
     })
 
     console.log(`✅ Gist generated successfully`)
-    return {
+    const result = {
       title: gist.title || '',
       topics: gist.topics || [],
       hashtags: gist.hashtags || []
     }
+
+    // Cache the result
+    if (useCache) {
+      setCachedAnalysis(`gist:${videoId}`, result)
+    }
+
+    return result
   } catch (error) {
     console.error('Failed to generate video gist:', error)
     throw new Error('Could not generate video insights')
@@ -127,7 +176,14 @@ export async function generateVideoGist(videoId: string) {
  * Generate a comprehensive video summary
  * Provides detailed content analysis for brand alignment
  */
-export async function generateVideoSummary(videoId: string, customPrompt?: string) {
+export async function generateVideoSummary(videoId: string, customPrompt?: string, useCache: boolean = true) {
+  // Check cache first (only for default prompt)
+  if (useCache && !customPrompt) {
+    const cacheKey = `summary:${videoId}`
+    const cached = getCachedAnalysis(cacheKey)
+    if (cached) return cached as string
+  }
+
   const client = getTwelveLabsClient()
 
   try {
@@ -152,11 +208,17 @@ Focus on elements that would help a content creator understand how this video al
     console.log(`✅ Summary generated successfully`)
 
     // Type guard to check if it's a summary result
+    let summary = ''
     if ('summarizeType' in result && result.summarizeType === 'summary') {
-      return result.summary || ''
+      summary = result.summary || ''
     }
 
-    return ''
+    // Cache the result (only for default prompt)
+    if (useCache && !customPrompt) {
+      setCachedAnalysis(`summary:${videoId}`, summary)
+    }
+
+    return summary
   } catch (error) {
     console.error('Failed to generate video summary:', error)
     throw new Error('Could not generate video summary')
@@ -190,7 +252,8 @@ export async function getTaskStatus(taskId: string) {
  */
 export async function waitForTaskCompletion(
   taskId: string,
-  onProgress?: (status: string) => void
+  onProgress?: (status: string) => void,
+  pollInterval: number = 1 // Poll every 1 second by default (was 2)
 ): Promise<string> {
   const client = getTwelveLabsClient()
 
@@ -198,7 +261,7 @@ export async function waitForTaskCompletion(
     console.log(`⏳ Waiting for task completion: ${taskId}`)
 
     const completedTask = await client.tasks.waitForDone(taskId, {
-      sleepInterval: 2, // Poll every 2 seconds
+      sleepInterval: pollInterval, // Faster polling for quicker response
       callback: (task: TwelvelabsApi.TasksRetrieveResponse) => {
         console.log(`   Status: ${task.status}`)
         if (onProgress) {
@@ -325,6 +388,103 @@ export async function analyzeVideo(
     }
   } catch (error) {
     console.error('Video analysis failed:', error)
+    throw error
+  }
+}
+
+/**
+ * Fast video analysis - returns quick insights only
+ * Use this when you need fast results (gist only, ~2-3x faster)
+ */
+export async function analyzeVideoFast(
+  videoFile: File | Buffer | Blob,
+  indexId: string,
+  videoFileName?: string,
+  onProgress?: (status: string) => void
+) {
+  try {
+    // Step 1: Upload video
+    if (onProgress) onProgress('uploading')
+    const task = await uploadVideo(videoFile, indexId, videoFileName)
+
+    // Step 2: Wait for indexing
+    if (onProgress) onProgress('indexing')
+    const videoId = await waitForTaskCompletion(task.id!, onProgress)
+
+    // Step 3: Generate only essential insights (gist is fastest)
+    if (onProgress) onProgress('analyzing')
+    const gist = await generateVideoGist(videoId)
+
+    if (onProgress) onProgress('complete')
+
+    return {
+      videoId,
+      taskId: task.id!,
+      title: gist.title,
+      topics: gist.topics,
+      hashtags: gist.hashtags
+    }
+  } catch (error) {
+    console.error('Fast video analysis failed:', error)
+    throw error
+  }
+}
+
+/**
+ * Progressive video analysis - returns quick results immediately, detailed analysis later
+ * Returns a promise for quick results and a function to get detailed results
+ */
+export async function analyzeVideoProgressive(
+  videoFile: File | Buffer | Blob,
+  indexId: string,
+  videoFileName?: string,
+  onProgress?: (status: string) => void
+) {
+  try {
+    // Step 1 & 2: Upload and index video
+    if (onProgress) onProgress('uploading')
+    const task = await uploadVideo(videoFile, indexId, videoFileName)
+
+    if (onProgress) onProgress('indexing')
+    const videoId = await waitForTaskCompletion(task.id!, onProgress)
+
+    // Step 3: Generate quick insights first (gist is fastest)
+    if (onProgress) onProgress('analyzing')
+    const gist = await generateVideoGist(videoId)
+
+    // Return quick results immediately
+    const quickResults = {
+      videoId,
+      taskId: task.id!,
+      title: gist.title,
+      topics: gist.topics,
+      hashtags: gist.hashtags
+    }
+
+    // Function to get detailed analysis later (can be called in background)
+    const getDetailedAnalysis = async () => {
+      const [summary, chapters, highlights] = await Promise.all([
+        generateVideoSummary(videoId),
+        generateVideoChapters(videoId),
+        generateVideoHighlights(videoId)
+      ])
+
+      return {
+        ...quickResults,
+        summary,
+        chapters,
+        highlights
+      }
+    }
+
+    if (onProgress) onProgress('complete')
+
+    return {
+      quick: quickResults,
+      detailed: getDetailedAnalysis
+    }
+  } catch (error) {
+    console.error('Progressive video analysis failed:', error)
     throw error
   }
 }

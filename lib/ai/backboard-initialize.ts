@@ -389,7 +389,7 @@ export async function analyzeVideoBrandAlignment(
   const client = getBackboardClient()
 
   try {
-    console.log('🎯 Analyzing video brand alignment with Grok-3...')
+    console.log('🎯 Analyzing video brand alignment with Claude...')
     // Format chapters and highlights for context
     const chaptersText = videoAnalysis.chapters && videoAnalysis.chapters.length > 0
       ? `\n\nChapters:\n${videoAnalysis.chapters.map((ch: VideoChapter, i: number) =>
@@ -438,11 +438,13 @@ Provide your response in the following JSON format (respond ONLY with valid JSON
 - Don't say "good emotional connection" - say "the story at X timestamp connects emotionally because Y"
 - Don't say "add more depth" - say "explain X in more detail at Y timestamp, similar to your top-performing content"`
 
+    // Use Claude for video analysis - it's faster and more reliable than Grok for structured analysis
+    const modelConfig = selectModelForTask('tone_analysis') // Claude is better for nuanced analysis
     const response = await client.addMessage(threadId, {
       content: prompt,
       memory: 'Auto',
-      llm_provider: selectModelForTask('trend_analysis').provider,  // Use X.AI for Grok-3
-      model_name: selectModelForTask('trend_analysis').model,  // Grok-3 model
+      llm_provider: modelConfig.provider,
+      model_name: modelConfig.model,
       web_search: 'Off'  // Don't need web search for this analysis
     })
 

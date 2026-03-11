@@ -728,8 +728,8 @@ Pick ONE trend for each topic that is highest ROI to create this week:
     const response = await client.addMessage(threadId, {
       content: prompt,
       memory: 'off',
-      llm_provider: 'xai',
-      model_name: 'grok-4-0709',
+      llm_provider: selectModelForTask('trend_analysis').provider,
+      model_name: selectModelForTask('trend_analysis').model,
       web_search: 'Auto'  // Enable web search for real-time trends
     })
 

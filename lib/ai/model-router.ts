@@ -21,8 +21,8 @@ import type { ModelSelection, AIResponse, VideoAnalysisContext, ContentGeneratio
 export function selectModelForTask(task: string): ModelSelection {
   const taskMap: Record<string, ModelSelection> = {
     'tone_analysis': {
-      model: 'claude-sonnet-4-20250514',
-      provider: 'anthropic',
+      model: 'gpt-5-chat-latest',
+      provider: 'openai',
       reason: 'Superior at nuanced communication analysis and understanding tone/voice'
     },
     'identity_reasoning': {
@@ -51,8 +51,8 @@ export function selectModelForTask(task: string): ModelSelection {
       reason: 'Fast, efficient compression and summarization'
     },
     'trend_analysis': {
-      model: 'claude-sonnet-4-20250514',
-      provider: 'anthropic',
+      model: 'gpt-5-chat-latest',
+      provider: 'openai',
       reason: 'Fast, reliable analysis with web search - better than Grok for avoiding timeouts'
     }
   }

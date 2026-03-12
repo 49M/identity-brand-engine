@@ -12,7 +12,7 @@ export function getBackboardClient(): InstanceType<typeof BackboardClient> {
   if (!backboardClient) {
     backboardClient = new BackboardClient({
       apiKey: process.env.BACKBOARD_API_KEY || '',
-      timeout: 120000 // 2 minutes timeout for web search requests
+      timeout: 140000
     })
   }
   return backboardClient
@@ -241,14 +241,18 @@ export async function getInitialTargetAudience(threadId: string): Promise<string
     const response = await client.addMessage(threadId, {
       content: 'Based on my creator profile document provided, please summarize the ideal target audience for me as a content creator. Include demographics, interests, platforms they are most active on, content needs, and any other useful information. Keep it concise and very easy to follow and apply into the creators content strategy.',
       memory: 'Auto',
-      llm_provider: selectModelForTask('identity_reasoning').provider,
-      model_name: selectModelForTask('identity_reasoning').model,
-      web_search: 'Auto'
+      llm_provider: 'anthropic',
+      model_name: 'claude-sonnet-4-20250514',
+      web_search: 'Off'
     })
 
     return response.content || 'Unable to generate target audience summary'
-  } catch (err) {
+  } catch (err: unknown) {
     console.error('Failed to get initial target audience:', err);
+    if (err && typeof err === 'object' && 'response' in err) {
+      const res = (err as { response: Response }).response
+      res.text().then(body => console.error('Backboard error body:', body)).catch(() => {})
+    }
     throw new Error('Could not get initial target audience');
   }
 }
@@ -737,6 +741,7 @@ Pick ONE trend for each topic that is highest ROI to create this week:
 
     return response.content || 'Unable to analyze trends. Please try again.'
   } catch (error) {
+    console.log(selectModelForTask('trend_analysis').model)
     console.error('Failed to analyze trends:', error)
     console.error('Error details:', {
       message: error instanceof Error ? error.message : String(error),

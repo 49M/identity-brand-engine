@@ -20,7 +20,7 @@ export interface CreatorSession {
 }
 
 export interface ModelSelection {
-  model: 'claude-sonnet-4-20250514' | 'gpt-5-chat-latest' | 'gemini-2.5-flash' | 'command-a-03-2025' | 'grok-4-0709'
+  model: 'claude-sonnet-4-20250514' | 'gpt-5-chat-latest' | 'gemini-2.5-flash' | 'command-a-03-2025' | 'grok-4-0709' | 'gpt-5' | 'gpt-4.1'
   provider: 'anthropic' | 'openai' | 'google' | 'cohere' | 'xai'
   reason: string
 }

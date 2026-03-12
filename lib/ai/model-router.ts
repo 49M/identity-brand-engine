@@ -21,37 +21,37 @@ import type { ModelSelection, AIResponse, VideoAnalysisContext, ContentGeneratio
 export function selectModelForTask(task: string): ModelSelection {
   const taskMap: Record<string, ModelSelection> = {
     'tone_analysis': {
-      model: 'gpt-5-chat-latest',
+      model: 'gpt-4.1',
       provider: 'openai',
       reason: 'Superior at nuanced communication analysis and understanding tone/voice'
     },
     'identity_reasoning': {
-      model: 'claude-sonnet-4-20250514',
-      provider: 'anthropic',
+      model: 'gpt-4.1',
+      provider: 'openai',
       reason: 'Excels at complex identity and brand positioning analysis'
     },
     'content_generation': {
-      model: 'gpt-5-chat-latest',
+      model: 'gpt-4.1',
       provider: 'openai',
       reason: 'Best-in-class creative ideation with diverse angles'
     },
     'voice_matching': {
-      model: 'claude-sonnet-4-20250514',
-      provider: 'anthropic',
+      model: 'gpt-4.1',
+      provider: 'openai',
       reason: 'Exceptional at matching and refining specific communication styles'
     },
     'strategic_ranking': {
-      model: 'gemini-2.5-flash',
-      provider: 'google',
+      model: 'gpt-4.1',
+      provider: 'openai',
       reason: 'Strong reasoning for pattern detection and strategic prioritization'
     },
     'quick_summary': {
-      model: 'command-a-03-2025',
-      provider: 'cohere',
+      model: 'gpt-4.1',
+      provider: 'openai',
       reason: 'Fast, efficient compression and summarization'
     },
     'trend_analysis': {
-      model: 'gpt-5-chat-latest',
+      model: 'gpt-4.1',
       provider: 'openai',
       reason: 'Fast, reliable analysis with web search - better than Grok for avoiding timeouts'
     }

@@ -54,9 +54,11 @@ export default function Home() {
               <Link href="/create-profile" className="px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full text-white font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all transform hover:scale-105">
                 Start Building Your Identity
               </Link>
-              <button className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white font-semibold hover:bg-white/20 transition-all">
-                See How It Works
-              </button>
+              <a href="https://www.youtube.com/watch?v=DCr5QcDGbUg" target="_blank" rel="noopener noreferrer">
+                <button className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white font-semibold hover:bg-white/20 transition-all">
+                  See How It Works
+                </button>
+              </a>
             </div>
 
             {/* Stats */}

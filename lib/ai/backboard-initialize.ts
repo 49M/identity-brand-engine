@@ -531,7 +531,6 @@ export async function remixVideoForBrand(
   const client = getBackboardClient()
 
   try {
-    // Format chapters if available
     const chaptersText = videoAnalysis.chapters && Array.isArray(videoAnalysis.chapters) && videoAnalysis.chapters.length > 0
       ? `\n\nVideo Chapters:\n${videoAnalysis.chapters.map((ch: unknown, i: number) => {
           const chapter = ch as VideoChapter
@@ -539,7 +538,6 @@ export async function remixVideoForBrand(
         }).join('\n')}`
       : ''
 
-    // Format highlights if available
     const highlightsText = videoAnalysis.highlights && Array.isArray(videoAnalysis.highlights) && videoAnalysis.highlights.length > 0
       ? `\n\nKey Highlights:\n${videoAnalysis.highlights.map((hl: unknown, i: number) => {
           const highlight = hl as VideoHighlight
@@ -620,7 +618,7 @@ Using my brand identity and content topics from our conversation memory, create 
 ---
 
 **CRITICAL REQUIREMENTS:**
-- Make it ACTIONABLE - I should be able to film this immediately
+- Make it ACTIONABLE - I should be able to film this immediately (scripted)
 - Keep it AUTHENTIC to my brand - no generic advice
 - Maintain VIRAL POTENTIAL - preserve what makes the original engaging
 - Be SPECIFIC - include exact words, camera angles, timing

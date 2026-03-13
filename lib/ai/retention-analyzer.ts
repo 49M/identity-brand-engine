@@ -35,7 +35,9 @@ export interface RetentionSegment {
 }
 
 /**
- * Heuristic scoring based on content characteristics
+ * Heuristic scoring based on content characteristics.
+ * Models a realistic retention curve: viewers drop off as video progresses,
+ * with boosts only for genuinely compelling moments.
  */
 function scoreSegment(
   segment: { start: number; end: number; title: string; summary: string },
@@ -43,74 +45,89 @@ function scoreSegment(
   segmentIndex: number,
   totalSegments: number
 ): { score: number; reason: string } {
-  let score = 50 // Base score
+  // Start below the "moderate risk" threshold — must earn green
+  let score = 35
   const reasons: string[] = []
 
-  // 1. Highlights boost engagement significantly
-  if (isHighlight) {
-    score += 25
-    reasons.push('Key moment')
+  // 1. Hook zone — first 12 seconds are make-or-break
+  if (segment.start < 12) {
+    score += 22
+    reasons.push('Hook zone')
   }
 
-  // 2. First 15 seconds are critical (hook)
-  if (segment.start < 15) {
-    score += 20
-    reasons.push('Hook period')
-  }
-
-  // 3. Position in video affects retention
-  const position = segmentIndex / totalSegments
-  if (position < 0.3) {
-    // Early content retains better
-    score += 10
-    reasons.push('Early content')
-  } else if (position > 0.7) {
-    // Late content has drop-off risk
-    score -= 15
+  // 2. Realistic positional decay curve
+  // Retention research shows ~50% of viewers are gone by the halfway point
+  const position = segmentIndex / Math.max(totalSegments - 1, 1)
+  if (position < 0.2) {
+    score += 8
+  } else if (position < 0.4) {
+    score += 2
+  } else if (position < 0.6) {
+    score -= 8
+    reasons.push('Mid-video drop')
+  } else if (position < 0.8) {
+    score -= 18
     reasons.push('Late-stage risk')
+  } else {
+    score -= 25
+    reasons.push('High drop-off zone')
   }
 
-  // 4. Segment length (too long = boredom risk)
+  // 3. Highlights are a genuine signal — but modest boost
+  if (isHighlight) {
+    score += 14
+    reasons.push('Key moment')
+  } else {
+    // Non-highlight chapters are statistically weaker
+    score -= 8
+  }
+
+  // 4. Segment duration penalties — attention degrades quickly
   const duration = segment.end - segment.start
-  if (duration > 60) {
+  if (duration > 90) {
+    score -= 18
+    reasons.push('Very long segment')
+  } else if (duration > 60) {
     score -= 10
     reasons.push('Long segment')
-  } else if (duration < 10 && duration > 3) {
-    score += 5
-    reasons.push('Punchy pacing')
+  } else if (duration > 30) {
+    score -= 4
+  } else if (duration <= 15 && duration > 3) {
+    score += 6
+    reasons.push('Tight pacing')
   }
 
-  // 5. Content engagement keywords
+  // 5. Content signal analysis
   const content = (segment.title + ' ' + segment.summary).toLowerCase()
 
-  // High-engagement triggers
-  if (/(story|personal|reveal|secret|surprising|shocking)/i.test(content)) {
-    score += 15
-    reasons.push('Emotional trigger')
-  }
-
-  if (/(how to|tutorial|step|guide|tip)/i.test(content)) {
+  // Strong engagement signals
+  if (/(reveal|secret|surprising|shocking|twist|never|actually)/i.test(content)) {
+    score += 14
+    reasons.push('Surprise/reveal')
+  } else if (/(story|personal|moment|experience|happened)/i.test(content)) {
     score += 10
-    reasons.push('Educational value')
-  }
-
-  if (/(question|ask|wonder|curious)/i.test(content)) {
+    reasons.push('Storytelling')
+  } else if (/(how to|step|exactly|formula|framework)/i.test(content)) {
     score += 8
+    reasons.push('Actionable value')
+  } else if (/(question|wonder|but why|what if)/i.test(content)) {
+    score += 6
     reasons.push('Curiosity gap')
   }
 
-  // Drop-off triggers
-  if (/(introduction|overview|background|context)/i.test(content)) {
-    score -= 10
-    reasons.push('Setup phase')
+  // Drop-off signals
+  if (/(introduction|overview|background|let me explain|in this video)/i.test(content)) {
+    score -= 14
+    reasons.push('Setup/filler')
+  } else if (/(conclusion|summary|recap|wrap up|thanks for watching|subscribe)/i.test(content)) {
+    score -= 16
+    reasons.push('Wind-down')
+  } else if (/(transition|next|moving on|now let)/i.test(content)) {
+    score -= 6
+    reasons.push('Transition')
   }
 
-  if (/(conclusion|summary|recap|ending)/i.test(content)) {
-    score -= 12
-    reasons.push('Wind-down phase')
-  }
-
-  // 6. Normalize score to 0-100
+  // 6. Normalize
   score = Math.max(0, Math.min(100, score))
 
   return {
@@ -123,8 +140,8 @@ function scoreSegment(
  * Generate retention category label
  */
 function getRetentionLabel(score: number): string {
-  if (score >= 70) return 'Strong Engagement'
-  if (score >= 50) return 'Moderate Risk'
+  if (score >= 68) return 'Strong Engagement'
+  if (score >= 45) return 'Moderate Risk'
   return 'Drop-off Risk'
 }
 

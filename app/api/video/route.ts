@@ -44,6 +44,11 @@ export async function POST(request: NextRequest) {
 
     console.log(`📹 Processing video upload: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`)
 
+    // Convert Web API File to a buffered Blob — the Twelve Labs SDK's internal
+    // fetch can fail with the raw File object from Next.js App Router FormData
+    const arrayBuffer = await file.arrayBuffer()
+    const videoBlob = new Blob([arrayBuffer], { type: file.type })
+
     // Get or create Twelve Labs index
     const indexId = await getOrCreateIndex()
 
@@ -63,7 +68,7 @@ export async function POST(request: NextRequest) {
     let analysisResult
     try {
       analysisResult = await analyzeVideo(
-        file,
+        videoBlob,
         indexId,
         file.name,
         (status) => {

@@ -407,7 +407,9 @@ export async function analyzeVideoBrandAlignment(
         ).join('\n')}`
       : ''
 
-    const prompt = `Using my brand identity and target audience specification from our previous conversations memory, analyze how well this video aligns with my authentic brand.
+    const prompt = `IMPORTANT: Respond with valid JSON only. No preamble, no explanation, no markdown — just the raw JSON object.
+
+Using my brand identity and target audience specification from our previous conversations memory, analyze how well this video aligns with my authentic brand.
 
 **Video Analysis from Twelve Labs:**
 - **Title**: ${videoAnalysis.title}
@@ -523,7 +525,8 @@ export async function remixVideoForBrand(
       improvements: string[]
       recommendations: string
     }
-  }
+  },
+  contentTopics: string[] = []
 ): Promise<string> {
   const client = getBackboardClient()
 
@@ -553,7 +556,11 @@ export async function remixVideoForBrand(
 - Areas to Improve: ${videoAnalysis.brandAlignment.improvements.join('; ')}`
       : ''
 
-    const prompt = `I want to REMIX this video to be perfectly aligned with my brand identity while maintaining its viral potential.
+    const contentTopicsText = contentTopics.length > 0
+      ? `\n\n**My Main Content Topics:** ${contentTopics.join(', ')}`
+      : ''
+
+    const prompt = `I want to REMIX this video to be perfectly aligned with my brand identity while maintaining its viral potential.${contentTopicsText}
 
 **Original Video:**
 - Title: ${videoAnalysis.title}
@@ -561,9 +568,9 @@ export async function remixVideoForBrand(
 - Summary: ${videoAnalysis.summary}${chaptersText}${highlightsText}${alignmentText}
 
 **Your Task:**
-Using my brand identity from our conversation memory, create a COMPLETE, READY-TO-FILM video script that:
+Using my brand identity and content topics from our conversation memory, create a COMPLETE, READY-TO-FILM video script that:
 1. Keeps the viral hooks and engagement patterns from the original
-2. Transforms the content to match MY authentic voice and brand dimensions
+2. Transforms the content to match MY authentic voice and brand dimensions (Make sure that the content relates to my brand even if the video itself is unrelated)
 3. Maintains the same core value but expresses it through MY lens
 4. Provides specific scene-by-scene instructions I can follow
 

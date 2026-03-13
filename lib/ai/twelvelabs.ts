@@ -148,16 +148,28 @@ export async function generateVideoGist(videoId: string, useCache: boolean = tru
   try {
     console.log(`🎯 Generating gist for video: ${videoId}`)
 
-    const gist = await client.gist({
+    const response = await client.analyze({
       videoId,
-      types: ['title', 'topic', 'hashtag']
+      prompt: 'Generate a suggested title, a list of relevant topics, and relevant hashtags for this video.',
+      responseFormat: {
+        type: 'json_schema',
+        jsonSchema: {
+          type: 'object',
+          properties: {
+            title: { type: 'string' },
+            topics: { type: 'array', items: { type: 'string' } },
+            hashtags: { type: 'array', items: { type: 'string' } }
+          }
+        }
+      }
     })
 
     console.log(`✅ Gist generated successfully`)
+    const parsed = JSON.parse(response.data || '{}')
     const result = {
-      title: gist.title || '',
-      topics: gist.topics || [],
-      hashtags: gist.hashtags || []
+      title: parsed.title || '',
+      topics: parsed.topics || [],
+      hashtags: parsed.hashtags || []
     }
 
     // Cache the result
@@ -199,19 +211,13 @@ export async function generateVideoSummary(videoId: string, customPrompt?: strin
 
 Focus on elements that would help a content creator understand how this video aligns with their brand identity.`
 
-    const result = await client.summarize({
+    const result = await client.analyze({
       videoId,
-      type: 'summary',
       prompt: customPrompt || defaultPrompt
     })
 
     console.log(`✅ Summary generated successfully`)
-
-    // Type guard to check if it's a summary result
-    let summary = ''
-    if ('summarizeType' in result && result.summarizeType === 'summary') {
-      summary = result.summary || ''
-    }
+    const summary = result.data || ''
 
     // Cache the result (only for default prompt)
     if (useCache && !customPrompt) {
@@ -296,19 +302,35 @@ export async function generateVideoChapters(videoId: string) {
   try {
     console.log(`📚 Generating chapters for video: ${videoId}`)
 
-    const result = await client.summarize({
+    const result = await client.analyze({
       videoId,
-      type: 'chapter'
+      prompt: 'Generate a list of chapters for this video with start time, end time, chapter title, and a brief chapter summary for each.',
+      responseFormat: {
+        type: 'json_schema',
+        jsonSchema: {
+          type: 'object',
+          properties: {
+            chapters: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  chapterNumber: { type: 'number' },
+                  start: { type: 'number' },
+                  end: { type: 'number' },
+                  chapterTitle: { type: 'string' },
+                  chapterSummary: { type: 'string' }
+                }
+              }
+            }
+          }
+        }
+      }
     })
 
     console.log(`✅ Chapters generated successfully`)
-
-    // Type guard for chapter result
-    if ('summarizeType' in result && result.summarizeType === 'chapter') {
-      return result.chapters || []
-    }
-
-    return []
+    const parsed = JSON.parse(result.data || '{}')
+    return parsed.chapters || []
   } catch (error) {
     console.error('Failed to generate video chapters:', error)
     return [] // Return empty array instead of throwing to allow graceful degradation
@@ -325,19 +347,33 @@ export async function generateVideoHighlights(videoId: string) {
   try {
     console.log(`⭐ Generating highlights for video: ${videoId}`)
 
-    const result = await client.summarize({
+    const result = await client.analyze({
       videoId,
-      type: 'highlight'
+      prompt: 'Identify the key highlights of this video. For each highlight, provide the start time, end time, and a brief description.',
+      responseFormat: {
+        type: 'json_schema',
+        jsonSchema: {
+          type: 'object',
+          properties: {
+            highlights: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  start: { type: 'number' },
+                  end: { type: 'number' },
+                  highlight: { type: 'string' }
+                }
+              }
+            }
+          }
+        }
+      }
     })
 
     console.log(`✅ Highlights generated successfully`)
-
-    // Type guard for highlight result
-    if ('summarizeType' in result && result.summarizeType === 'highlight') {
-      return result.highlights || []
-    }
-
-    return []
+    const parsed = JSON.parse(result.data || '{}')
+    return parsed.highlights || []
   } catch (error) {
     console.error('Failed to generate video highlights:', error)
     return [] // Return empty array instead of throwing

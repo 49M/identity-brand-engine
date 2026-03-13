@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get the Backboard session ID from meta memory
-    const meta = await readMemory('meta')
+    const [meta, brand] = await Promise.all([readMemory('meta'), readMemory('brand')])
     if (!meta.backboardSessionId) {
       return NextResponse.json(
         {
@@ -31,12 +31,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const contentTopics = brand?.persona?.coreThemes ?? []
+
     console.log('🎬 Generating brand-optimized video remix...')
 
     // Generate the remix script
     const remixScript = await remixVideoForBrand(
       meta.backboardSessionId,
-      videoAnalysis
+      videoAnalysis,
+      contentTopics
     )
 
     console.log('✅ Video remix generated successfully')

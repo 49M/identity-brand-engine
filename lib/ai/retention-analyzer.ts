@@ -136,18 +136,12 @@ function scoreSegment(
   }
 }
 
-/**
- * Generate retention category label
- */
 function getRetentionLabel(score: number): string {
   if (score >= 68) return 'Strong Engagement'
   if (score >= 45) return 'Moderate Risk'
   return 'Drop-off Risk'
 }
 
-/**
- * Analyze video chapters and highlights to create retention timeline
- */
 export function analyzeRetentionTimeline(
   chapters?: Chapter[],
   highlights?: Highlight[]
